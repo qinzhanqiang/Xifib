@@ -8,7 +8,7 @@
 #include "MainFrm.h"
 #include "acquisition.h"
 #include "afxwin.h"
-
+#include "ManualAdjustDialog.h"
 
 extern LPSETUP lps;
 extern bool flag_start;
@@ -67,6 +67,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_STOP_COLLIMAT, &CMainFrame::OnStopCollimat)
 	ON_UPDATE_COMMAND_UI(ID_STOP_COLLIMAT, &CMainFrame::OnUpdateStopCollimat)
 	ON_UPDATE_COMMAND_UI(ID_COLLIMAT, &CMainFrame::OnUpdateCollimat)
+	ON_COMMAND(ID_MANUAL_ADJUST, &CMainFrame::OnManualAdjust)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -1124,7 +1125,10 @@ void CMainFrame::OnSci()
 		}
 		strStatus+=",8,1";
 		//AfxMessageBox(strStatus);
-
+		if (bIsOpened)
+		{
+			CMainFrame::OnCloseCom();
+		}
 		CMainFrame::OnOpenCom();
 	}
 
@@ -1513,3 +1517,21 @@ long CMainFrame::OnReceiveEvent(WPARAM wParam, LPARAM lParam)
 
 
 
+
+
+void CMainFrame::OnManualAdjust()
+{
+	// TODO: 在此添加命令处理程序代码
+	
+	if (bIsOpened == false)
+	{
+		AfxMessageBox(_T("请先打开串口"));
+	}
+	else{
+		ManualAdjustDialog ColDlg;
+		ColDlg.DoModal();		//弹出手动调整对话框
+
+	}
+	
+	
+}

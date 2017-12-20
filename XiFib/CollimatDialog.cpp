@@ -551,9 +551,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];					
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010201_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+						
 					}
 					if(next_ok)
 					{
@@ -587,9 +597,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010200_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -628,9 +648,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010201_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -665,9 +695,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010200_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -707,7 +747,7 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					CString xs[3];
 					for(int i=0;i<3;++i)
 						xs[i].Format(_T("%d"),BYTE_data[i]);				
-					AfxMessageBox("01 03 00"+xs[0]+xs[1]+xs[2]);
+					//AfxMessageBox("01 03 00"+xs[0]+xs[1]+xs[2]);
 					
 					int SData[6];
 					SData[0] = 01;
@@ -718,9 +758,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010300_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -754,9 +804,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010301_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -795,9 +855,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010300_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -831,9 +901,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010301_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -882,9 +962,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010100_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -918,9 +1008,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010101_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -959,9 +1059,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010100_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -995,9 +1105,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010101_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1046,9 +1166,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010401_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1082,9 +1212,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010400_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1123,9 +1263,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010401_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1159,9 +1309,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010400_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1210,9 +1370,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010500_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1246,9 +1416,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010501_1"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1287,9 +1467,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					SData[5] = BYTE_data[2];
 					((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
 					//AfxMessageBox(_T("010500_2"));
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{
@@ -1329,9 +1519,19 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					}
 					if(myRByte[0]==10)
 						return true;*/
+					//获取当前时间
+					long begintime,endtime;
+					clock_t t = clock();
+					endtime = begintime = t/CLOCKS_PER_SEC;
 					while(!next_ok)
 					{
-						;
+						t = clock();
+						endtime = t/CLOCKS_PER_SEC;
+						if(endtime - begintime > 5){
+							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
+							return false;
+						}
+
 					}
 					if(next_ok)
 					{

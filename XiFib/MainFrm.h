@@ -149,6 +149,7 @@ public:
 	afx_msg void OnStopCollimat();
 	afx_msg void OnUpdateStopCollimat(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateCollimat(CCmdUI *pCmdUI);
+	afx_msg void OnManualAdjust();
 };
 
 
