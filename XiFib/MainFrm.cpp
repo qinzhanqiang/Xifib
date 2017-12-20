@@ -563,6 +563,7 @@ void CMainFrame::OnStop()
 	if (flag_start)
 	{
 		flag_start = false;
+
 	}
 }
 
@@ -980,7 +981,12 @@ void CMainFrame::OnCollimat()
 		ColDlg = new CCollimatDialog(ColDlg);
 		ColDlg->Create(IDD_COLLIMAT,this); 
 	}
-
+	if (!flag_start)
+	{
+		CString str("系统未启动，请先启动");
+		MessageBox(str, _T("警告"), MB_OK | MB_ICONWARNING); 
+		return;
+	}
 	ColDlg->ShowWindow(SW_SHOW);
 	return;  
 
@@ -1026,13 +1032,13 @@ void CMainFrame::OnUpdateStopCollimat(CCmdUI *pCmdUI)
 
 
 
-
+static CSCIDialog mysetup;
 //串口通信参数设置
 void CMainFrame::OnSci()
 {
 	// TODO: 在此添加命令处理程序代码
 	CString strStatus;
-	CSCIDialog mysetup;
+
 	if(mysetup.DoModal() == IDOK)
 	{
 		switch(mysetup.m_Com)
@@ -1117,7 +1123,9 @@ void CMainFrame::OnSci()
 
 		}
 		strStatus+=",8,1";
-		AfxMessageBox(strStatus);
+		//AfxMessageBox(strStatus);
+
+		CMainFrame::OnOpenCom();
 	}
 
 }

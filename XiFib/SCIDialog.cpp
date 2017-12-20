@@ -14,8 +14,8 @@ IMPLEMENT_DYNAMIC(CSCIDialog, CDialogEx)
 
 CSCIDialog::CSCIDialog(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSCIDialog::IDD, pParent)
-	, m_Com(0)
-	, m_BaudRate(0)
+	, m_Com(1)			//默认设置为串口2
+	, m_BaudRate(1)		//默认设置为波特率9600
 	, m_Parity(0)
 {
 

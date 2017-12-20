@@ -15,10 +15,10 @@ long dataWLen;	//发送数据的长度
 BYTE myRByte[1024]; //存放读数据
 
 
-LPCTSTR myCom;	//串口名称
+LPCTSTR myCom="COM2";	//串口名称
 BYTE myParity;	//奇偶校验类型
 DWORD myfParity;	//是否使用奇偶校验
-DWORD myBaudRate;	//波特率
+DWORD myBaudRate=CBR_9600;	//波特率
 bool bIsOpened;		//串口打开标志
 
 bool blnOpened = false;
@@ -56,3 +56,4 @@ volatile BOOL m_cRun;//准直线程
 bool FiberModelFlag;
 //偏轴度
 volatile double PartialAng;
+                           

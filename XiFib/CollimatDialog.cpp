@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "XiFib.h"
-#include "CollimatDialog.h"
+#include "CollimatDialog.h"	
 #include "afxdialogex.h"
 #include "acquisition.h"
 #include "MainFrm.h"
@@ -84,8 +84,6 @@ BOOL CCollimatDialog::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
-	
-
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -95,12 +93,6 @@ void CCollimatDialog::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CDialogEx::OnOK();
-	/*double Distance =((CMainFrame *)AfxGetMainWnd())->m_Distance;
-
-	double x=((CMainFrame *)AfxGetMainWnd())->m_wndEllipse.Epse.xc;
-
-	double y=((CMainFrame *)AfxGetMainWnd())->m_wndEllipse.Epse.yc;*/
-
 	/******************准直线程****************/
 	m_cRun = TRUE;
 	//初始化线程数据
@@ -109,10 +101,6 @@ void CCollimatDialog::OnBnClickedOk()
 	threadData.LhW = LhalfW;
 	threadData.x = g_Px;
 	threadData.y = g_Py;*/
-
-	
-
-	
 	HANDLE thread = CreateThread(NULL, 
 		0, 
 		ThreadProcCollimat, 
@@ -122,10 +110,7 @@ void CCollimatDialog::OnBnClickedOk()
 		NULL);//创建一个准直线程
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
 	CloseHandle(thread);//关闭线程9
-	
-	
-	
-	
+
 }
 
 
@@ -133,7 +118,7 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 {
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
 	//为圆形光纤则直接进行准直，楔形光纤则先计算偏轴度再进行准直
-	if(!FiberModelFlag)
+	if(!FiberModelFlag)		//楔形光纤
 	{
 		//先求偏轴度
 		vector<cv::Point2d> arr;
@@ -165,7 +150,7 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 		Dist = GetDivAng(Xarr,0.01);
 	//	Dist = GetDivAng(Yarr,0.02);
 	}
-	else
+	else		//圆形光纤
 	{
 		while(m_cRun)
 		{
@@ -193,37 +178,6 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
     	//Dist = GetDivAng(Yarr,0.01);
 		Dist = GetDivAngNew1(Xarr,Yarr,0.05,0.1);
 	}
-	//THREAD_DATA* pThreadData = (THREAD_DATA*)lpParameter;
-	
-	//m_cRun = TRUE;
-
-	//cout<<"请进行准直函数操作"<<endl;
-	//while(m_cRun)
-	//{
-	//	
-	//	if(Init_collimation())
-	//	{
-	//		AfxMessageBox(_T("准直成功"));
-	//		m_cRun = FALSE;
-	//	}
-	//	else
-	//	{
-	//		AfxMessageBox(_T("准直失败"));
-	//		m_cRun = FALSE;
-	//	}
-	//	
-	//}
-	//
-	//vector<double> Xarr;
-	//vector<double> Yarr;
-	//DataGetLength(Xarr,Yarr);
-	////cout<<"短轴计算长度："<<GetDivAng(Xarr)<<endl;
-	////cout<<"长轴计算长度："<<GetDivAng(Yarr)<<endl;//这个的double值赋给那个长度的变量;
-	//
-	//Dist = GetDivAng(Xarr,0.1);
-	//Dist = GetDivAng(Yarr,0.1);
-	//m_cRun = FALSE;
-	//ReleaseMutex(g_hMutex);//释放互斥量锁
 	AfxMessageBox(_T("测量成功"));
 	return 0;
 }
@@ -237,30 +191,27 @@ bool Init_collimation()
 	double Z0_L = 5;//每次将Z轴进行移动的距离
 	double Z0_L_R=2;
 	double Z0_C=1;
-	bool flag = false;//Z轴移动方向标记
-	int flag_x_y = 0;//角度&X,&Y移动方向
+	bool flag = false;						//Z轴移动方向标记
+	int flag_x_y = 0;						//角度&X,&Y移动方向
 
 	std::deque<cv::Point2d> Center_last;
-	double R_long = 0;//圆心与中心的距离
-	/*double Z_distance = 0;
-	cout<<"请输入Z轴初始距离：";
-	cin>>Z_distance; */
-	double Z_distance = Distance; 
-	double L_short = LhalfW;//短轴长度
-	//double L_long  = 0;//长轴长度
+	double R_long = 0;						//圆心与中心的距离
 	
-	//
+	
+	double Z_distance = Distance; 
+	double L_short = LhalfW;				//短轴长度
+	//double L_long  = 0;					//长轴长度
+	
+	//读取当前中心点坐标
 	cv::Point2d Center_f = In_Center_Point(g_Px,g_Py);
-	//cv::Point2d Center_f=(g_Px,g_Py);
-	/*Center_f.x = m_Ellipse.xc;
-	Center_f.y = m_Ellipse.yc;*/
-	//将中心移动到指定位置附近
+	
+	//将中心移动到指定位置附近，如果当前中心点坐标相比于设置的原点坐标x,y轴的距离大于300，则调整光斑位置
 	if(abs(Center_f.x-Center_0.x)>300 || abs(Center_f.y-Center_0.y)>300)
 	{
 		int dataX[3] = {0,0,0};
-		int data_X = abs((Center_f.x-Center_0.x)*5.5);//um
+		int data_X = (int)abs((Center_f.x-Center_0.x)*5.5);//um
 		int dataY[3] = {0,0,0};
-		int data_Y = abs((Center_f.y-Center_0.y)*5.5);//um
+		int data_Y = (int)abs((Center_f.y-Center_0.y)*5.5);//um
 
 		data_X = data_X/10;
 		dataX[2] = data_X%10;
@@ -276,45 +227,24 @@ bool Init_collimation()
 		data_Y = data_Y/10;
 		dataY[0] = data_Y;
 
-		if(trans(1,1,(Center_f.x-Center_0.x),dataX)&&trans(2,1,(Center_f.y-Center_0.y),dataY))
+		if(trans(AXISx,FORWORD,(Center_f.x-Center_0.x),dataX)&&trans(AXISy,FORWORD,(Center_f.y-Center_0.y),dataY))
 		{
-
-			//cv::Point2d P_center_now0=In_Center_Point(g_Px,g_Py);
 			cv::Point2d P_center_now0=In_Center_Point(g_Px,g_Py);;
-			//X_distace0 = Center_last[1].x-Center_0.x;
-			// Y_distace0 = Center_last[1].y-Center_0.y;
-			//cout<<"向中心靠近后中心变为:（"<<Center_0.x<<","<<Center_0.y<<")"<<endl;
-			
-			//		AfxMessageBox(_T("向中心靠近后中心变为:"));
+			AfxMessageBox(_T("向设定中心靠近完成"));
 		}
 		else
 		{
-			//cout<<"向中心靠近出错";
-			AfxMessageBox("向中心靠近出错");
+			AfxMessageBox("向设定中心靠近出错");
 		}
 	}
 	else
 	{
-		//	AfxMessageBox("不用向中心靠近，此时圆心为:（)");
+		//AfxMessageBox("不用向中心靠近，此时圆心为:（)");
 		//cout<<"不用向中心靠近，此时圆心为:（"<<Center_f.x<<","<<Center_f.y<<")"<<endl;
 		;//Center_last.push_back(Center_f);
 	}
 
-
-	//while(L_short>140)
-	//{		
-	//	int data[3] = {0,0,0};
-	//	int data_Z = abs(Z0_C*100);
-	//	data[2] = data_Z%10;
-	//	data_Z = data_Z/10;
-	//	data[1] = data_Z%10;
-	//	data_Z = data_Z/10;
-	//	data[0] = data_Z;
-	//	trans(3,0,Z0_L,data);//反复向前移动		
-	//	Sleep(1000);
-	//	L_short = LhalfW;
-
-	//}
+	//判断短轴长度是否在120--130之间，否则调整距离
 	while(L_short>130 || L_short<120)
 	{
 		if(L_short>130)
@@ -326,60 +256,52 @@ bool Init_collimation()
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			trans(3,0,Z0_C,data);//反复向前移动		
+			trans(AXISz,NEGITIVE,Z0_C,data);//反复向后移动		
 			Sleep(1000);//延时
-			//cout<<"请输入短轴长度：";
-			//cin>>LhalfW;
+			
+			//获取当前时刻的短轴长度
 			L_short = LhalfW;
 		}
 		else
 		{
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			trans(3,1,Z0_C,data);//反复向后移动		
+			trans(AXISz,FORWORD,Z0_C,data);//反复向后移动		
 			Sleep(1000);
-			//cout<<"请输入短轴长度：";
-			//cin>>LhalfW;
+
+			//获取当前时刻的短轴长度
 			L_short = LhalfW;
 		}
 	}
 
-	//
+	//读取并存储两个中心坐标
 	while(Center_last.size()<2)
 	{
 		if(Center_last.empty())
 		{
 			Sleep(1000);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
-			//cout<<"读入第一个坐标值：";
-			//AfxMessageBox("读入第一个坐标值：");
-			//Center_now = In_Center_Point(g_Px,g_Py);
-		//	Center_now = (g_Px,g_Py);
-			/*Center_now.x = m_Ellipse.xc;
-			Center_now.y = m_Ellipse.yc;*/
 			Center_last.push_back(Center_now);
-
 		}
 		else 
 		{
 			//flag = false时向后移动
-			flag = true;
+			flag = true;				//正向移动
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_L_R*1000);//(um)
+			int data_Z = (int)abs(Z0_L_R*1000);//(um)
 			data_Z = data_Z/10;
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			if(!trans(3,1,Z0_L,data))
+			if(!trans(AXISz,FORWORD,Z0_L,data))
 			{
-				//cout<<"Z轴移动出错";
 				AfxMessageBox("Z轴移动出错");
 				return false;
 			}
@@ -387,12 +309,6 @@ bool Init_collimation()
 
 			Sleep(1000);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
-			//cout<<"读入第二个坐标值：";
-		//	AfxMessageBox("读入第二个坐标值：");
-			//Center_now = In_Center_Point(g_Px,g_Py);
-		//	Center_now = (g_Px,g_Py);
-			/*Center_now.x = m_Ellipse.xc;
-			Center_now.y = m_Ellipse.yc;*/
 			Center_last.push_back(Center_now);
 		}
 	}
@@ -400,28 +316,26 @@ bool Init_collimation()
 	
 	if(Center_last.size()!=2)
 	{
-		//cout<<"初次调节时数组出错"<<endl;
 		AfxMessageBox("初次调节时数组出错");
 	}
-	//cout<<"进入循环调节"<<endl;
-//	AfxMessageBox("进入循环调节");
+
+	//进入循环调节环节
+	//AfxMessageBox("进入循环调节");
 	int right_num = 0;
 	while(right_num<3)
 	{	
 		if(Center_last.size()!=2)
 		{
-			//cout<<"数组出错"<<endl;
 			AfxMessageBox("数组出错");
 			return false;
 		}
-		//Z轴移动一次，记录数据
-		//cout<<"Z轴移动一次，记录数据"<<endl;
-	//	AfxMessageBox("Z轴移动一次，记录数据");
-		if(flag == false)//flag = false时向后移动
+		
+		//AfxMessageBox("Z轴移动一次，记录数据");
+		if(flag == false)		//flag = false时向后移动
 		{
 			flag = true;
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_L_R*1000);//(um)
+			int data_Z = (int)abs(Z0_L_R*1000);//(um)
 			data_Z = data_Z/10;
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
@@ -429,32 +343,24 @@ bool Init_collimation()
 			data_Z = data_Z/10;
 			data[0] = data_Z;
 
-			if(!trans(3,1,Z0_L_R,data))
+			if(!trans(AXISz,FORWORD,Z0_L_R,data))
 			{
-				//cout<<"Z轴移动出错";
 				AfxMessageBox("Z轴移动出错");
 				return false;
 			}
 			Z_distance+=Z0_L_R;
-			//Center_now = In_Center_Point(g_Px,g_Py);
 			Sleep(1000);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
-			//cout<<"读入当前坐标值:";
-		//	AfxMessageBox("读入当前坐标值:");
-			
-			/*Center_now.x = m_Ellipse.xc;
-			Center_now.y = m_Ellipse.yc;*/
-
+			//储存当前中心坐标
 			Center_last.push_back(Center_now);
 			Center_last.pop_front();
-
 		}
 		else
 		{
 			flag = false;
 
 			int data[3] = {0,0,0};
-			int data_Z = Z0_L_R*1000;//(um)
+			int data_Z = (int)Z0_L_R*1000;//(um)
 			data_Z = abs(data_Z/10);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
@@ -462,7 +368,7 @@ bool Init_collimation()
 			data_Z = data_Z/10;
 			data[0] = data_Z;
 
-			if(!trans(3,0,Z0_L_R,data))
+			if(!trans(AXISz,NEGITIVE,Z0_L_R,data))
 			{
 				//cout<<"Z轴移动出错";
 				AfxMessageBox("Z轴移动出错");
@@ -471,18 +377,13 @@ bool Init_collimation()
 			Z_distance-=Z0_L_R;
 			Sleep(1000);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
-			//cout<<"读入当前坐标值：";
-		//		AfxMessageBox("读入当前坐标值：");
-			//Center_now = In_Center_Point(g_Px,g_Py);
-			/*Center_now.x = m_Ellipse.xc;
-			Center_now.y = m_Ellipse.yc;*/
+			
 			Center_last.push_back(Center_now);
 			Center_last.pop_front();
 
 		}
 		if(abs(Center_last[1].x-Center_last[0].x)<1 && abs(Center_last[1].y-Center_last[0].y)<1 )
 		{
-			//cout<<"Z轴移动之后中心不变"<<endl;
 			//AfxMessageBox("Z轴移动之后中心不变");
 			++right_num;
 		}
@@ -494,10 +395,10 @@ bool Init_collimation()
 
 			CString xs1[4];
 			int datatatat[4]={0,0,0,0};
-			datatatat[0]=p1.x;
-			datatatat[1]=p1.y;
-			datatatat[2]=p2.x;
-			datatatat[3]=p2.y;
+			datatatat[0]=(int)p1.x;
+			datatatat[1]=(int)p1.y;
+			datatatat[2]=(int)p2.x;
+			datatatat[3]=(int)p2.y;
 			xs1[0].Format(_T("%d"),datatatat[0]);
 			xs1[1].Format(_T("%d"),datatatat[1]);
 			xs1[2].Format(_T("%d"),datatatat[2]);
@@ -533,7 +434,7 @@ bool Init_collimation()
 				//cout<<"向后移动："<<"("<<p1.x<<","<<p1.y<<")---("<<p2.x<<","<<p2.y<<")"<<endl;
 			//	AfxMessageBox("向后移动：");
 			//		AfxMessageBox("向后移动："+xs1[0]+","+xs1[1]+"-----"+xs1[2]+","+xs1[3]);
-				if(trans(4,0,X_add_now,dataX)&&trans(5,0,Y_add_now,dataY))
+				if(trans(AXISxangle,NEGITIVE,X_add_now,dataX)&&trans(AXISyangle,NEGITIVE,Y_add_now,dataY))
 				{
 					//cout<<"角度校准成功，进入下一次校准"<<endl;
 			//		AfxMessageBox("角度校准成功，进入下一次校准");
@@ -571,7 +472,7 @@ bool Init_collimation()
 				//cout<<"向前移动："<<"("<<p1.x<<","<<p1.y<<")---("<<p2.x<<","<<p2.y<<")"<<endl;
 		//		AfxMessageBox("向前移动：");
 			//	AfxMessageBox("向前移动："+xs1[0]+","+xs1[1]+"-----"+xs1[2]+","+xs1[3]);
-				if(trans(4,1,X_add_now,dataX)&&trans(5,1,Y_add_now,dataY))
+				if(trans(AXISxangle,FORWORD,X_add_now,dataX)&&trans(AXISyangle,FORWORD,Y_add_now,dataY))
 				{
 					//cout<<"角度校准成功，进入下一次校准"<<endl;
 		//			AfxMessageBox("角度校准成功，进入下一次校准");
@@ -610,17 +511,26 @@ bool Init_collimation()
 
 	return true;
 }
+/*
+函数名	：trans
+功能		：与下位机通信
+参数		：
+		X_or_Y_or_Z	: 1代表平移台的x轴；2代表平移台的y轴；3代表平移台的z轴；4代表角位台的x角度；5代表角位台的y角度
+		up_down_flag: 1代表正向移动；0代表负向移动
+		distance	: 移动的距离
+		BYTE_data	: 发送到下位机的数据
 
-bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
+*/
+bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_data)
 {
 	if(BYTE_data[0]==0&&BYTE_data[1]==0&&BYTE_data[2]<10)
 		return true;
 
 	switch(X_or_Y_or_Z)
 	{
-	case 1:
+	case AXISx:
 		{
-			if(up_down_flag==1)
+			if(up_down_flag==FORWORD)
 			{
 				//cout<<"将X向正向移动："<<distance<<endl;//X轴表示02，光斑X坐标变大：01
 				//AfxMessageBox(_T("将X向正向移动："));
@@ -697,7 +607,7 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 					}
 				}		
 			}
-			else if(up_down_flag==0)
+			else if(up_down_flag==NEGITIVE)
 			{
 				//cout<<"将X向负向移动："<<distance<<endl;
 				//AfxMessageBox(_T("将X向负向移动："));
@@ -785,9 +695,9 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 			break;
 
 		}
-	case 2:
+	case AXISy:
 		{
-			if(up_down_flag==1)
+			if(up_down_flag==FORWORD)
 			{
 				//cout<<"将Y向正向移动："<<distance<<endl;//Y轴表示03，光斑Y坐标变大：00
 				//AfxMessageBox(_T("将Y向正向移动："));
@@ -864,7 +774,7 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 					}
 				}	
 			}
-			else if(up_down_flag==0)
+			else if(up_down_flag==NEGITIVE)
 			{
 				//cout<<"将Y向负向移动："<<distance<<endl;
 				//AfxMessageBox(_T("将Y向负向移动："));
@@ -949,9 +859,9 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 			}
 			break;
 		}
-	case 3:
+	case AXISz:
 		{
-			if(up_down_flag==1)
+			if(up_down_flag==FORWORD)
 			{
 				//cout<<"将Z向正向移动："<<distance<<endl;//X轴表示01，光斑半径R变大：00
 				//AfxMessageBox(_T("将Z向正向移动："));
@@ -1028,7 +938,7 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 					}
 				}
 			}
-			else if(up_down_flag==0)
+			else if(up_down_flag==NEGITIVE)
 			{
 				//cout<<"将Z向负向移动："<<distance<<endl;//靠近相机
 				//AfxMessageBox(_T("将Z向负向移动："));
@@ -1113,9 +1023,9 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 			}
 			break;
 		}
-	case 4:
+	case AXISxangle:
 		{
-			if(up_down_flag==1)
+			if(up_down_flag==FORWORD)
 			{
 				//cout<<"将&X角度向正向移动："<<distance<<endl;//&X轴表示04，光斑X坐标变大：01
 				//AfxMessageBox(_T("将&X角度向正向移动："));
@@ -1192,7 +1102,7 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 					}
 				}
 			}
-			else if(up_down_flag==0)
+			else if(up_down_flag==NEGITIVE)
 			{
 				//cout<<"将&X角度负向移动："<<distance<<endl;
 			//	AfxMessageBox(_T("将&X角度负向移动："));
@@ -1277,9 +1187,9 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 			}
 			break;
 		}
-	case 5:
+	case AXISyangle:
 		{
-			if(up_down_flag==1)
+			if(up_down_flag==FORWORD)
 			{
 				//cout<<"将&Y角度向正向移动："<<distance<<endl;//&Y轴表示05，光斑Y坐标变大：00
 	//			AfxMessageBox(_T("将&Y角度向正向移动："));
@@ -1356,7 +1266,7 @@ bool trans(int X_or_Y_or_Z,int up_down_flag,double distance,int* BYTE_data)
 					}
 				}
 			}
-			else if(up_down_flag==0)
+			else if(up_down_flag==NEGITIVE)
 			{
 				//cout<<"将&Y角度负向移动："<<distance<<endl;
 			//	AfxMessageBox(_T("将&Y角度负向移动："));
@@ -1488,7 +1398,7 @@ bool close_to_ceter0(cv::Point2d P_now,deque<cv::Point2d> & Center_last)
 		data_Y = data_Y/10;
 		dataY[0] = data_Y;
 
-		if(trans(1,1,X_distace0,dataX)&&trans(2,1,Y_distace0,dataY))
+		if(trans(AXISx,FORWORD,X_distace0,dataX)&&trans(AXISy,FORWORD,Y_distace0,dataY))
 		{
 			cv::Point2d P_ceter_now;
 			P_ceter_now.x = P_now.x-X_distace0;
@@ -1534,21 +1444,13 @@ cv::Point2d In_Center_Point(double xc,double yc)
 		if(!next_ok)
 		{
 			cv::Point2d P;
-			//cout<<"X=";
-			//cin>>P.x;
 			P.x = xc;
-			//cout<<"Y=";
-			//cin>>P.y;
 			P.y = yc;
 			return P;
 		}
 	}
 	cv::Point2d P;
-	//cout<<"X=";
-	//cin>>P.x;
 	P.x = xc;
-	//cout<<"Y=";
-	//cin>>P.y;
 	P.y = yc;
 	return P;
 }
@@ -1778,7 +1680,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			trans(3,0,Z0_C,data);//反复向前移动		
+			trans(AXISz,NEGITIVE,Z0_C,data);//反复向前移动		
 			Sleep(1000);//延时
 			//cout<<"请输入短轴长度：";
 			//cin>>LhalfW;
@@ -1793,7 +1695,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			trans(3,1,Z0_C,data);//反复向后移动		
+			trans(AXISz,FORWORD,Z0_C,data);//反复向后移动		
 			Sleep(1000);
 			//cout<<"请输入短轴长度：";
 			//cin>>LhalfW;
@@ -1828,7 +1730,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 		data[1] = data_Z%10;
 		data_Z = data_Z/10;
 		data[0] = data_Z;
-		trans(3,1,AddL,data);//反复向后移动	
+		trans(AXISz,FORWORD,AddL,data);//反复向后移动	
 		Sleep(1000);
 	}
 	//回到原处
@@ -1839,7 +1741,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 	data[1] = data_Z%10;
 	data_Z = data_Z/10;
 	data[0] = data_Z;
-	trans(3,0,AddL*(Num-1),data);//反复向后移动	
+	trans(AXISz,NEGITIVE,AddL*(Num-1),data);//反复向后移动	
 	return true;
 }
 bool DataGetPoint(vector<cv::Point2d> &arr)
@@ -1864,7 +1766,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			trans(3,0,AddL,data);//反复向前移动		
+			trans(AXISz,NEGITIVE,AddL,data);//反复向前移动		
 			Sleep(1000);//延时
 			//cout<<"请输入短轴长度：";
 			//cin>>LhalfW;
@@ -1879,7 +1781,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			trans(3,1,Z0_C,data);//反复向后移动		
+			trans(AXISz,FORWORD,Z0_C,data);//反复向后移动		
 			Sleep(1000);
 			//cout<<"请输入短轴长度：";
 			//cin>>LhalfW;
@@ -1910,7 +1812,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 		data[1] = data_Z%10;
 		data_Z = data_Z/10;
 		data[0] = data_Z;
-		trans(3,1,AddL,data);//反复向后移动	
+		trans(AXISz,FORWORD,AddL,data);//反复向后移动	
 		Sleep(1000);
 	}
 	//回到原处
@@ -1921,6 +1823,6 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 	data[1] = data_Z%10;
 	data_Z = data_Z/10;
 	data[0] = data_Z;
-	trans(3,0,AddL*(Num-1),data);//反复向后移动	
+	trans(AXISz,NEGITIVE,AddL*(Num-1),data);//反复向后移动	
 	return true;
 }

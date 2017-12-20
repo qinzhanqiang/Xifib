@@ -21,6 +21,8 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
+	
+
 	DECLARE_MESSAGE_MAP()
 public:
 	CButton m_ShortAngle;
@@ -34,14 +36,22 @@ public:
 	
 };
 
-	//Z轴初始距离
-	/*extern double Z_distance = 0;
-	extern double Distance;
-	extern double LhalfW;
-	extern double halfW;*/
+typedef enum AXISn
+{
+	AXISx,
+	AXISy,
+	AXISz,
+	AXISxangle,
+	AXISyangle
 
+}AXISn;
+
+typedef enum DIRECTION{
+	FORWORD,
+	NEGITIVE
+}DIRECTION;
 bool Init_collimation();
-bool trans(int X_or_Y,int up_down_flag,double distance,int* BYTE_data);
+bool trans(AXISn X_or_Y,DIRECTION up_down_flag,double distance,int* BYTE_data);
 cv::Point2d In_Center_Point(double xc,double yc);
 bool close_to_ceter0(cv::Point2d P_now,deque<cv::Point2d> & Center_last);
 
@@ -53,8 +63,3 @@ double Partial_degree(vector<cv::Point2d> arr);
 //发散角计算
 double GetDivAng(vector<double> arr,double Thre);
 double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double ThreY);
-
-//typedef struct _THREAD_DATA 
-//{ 
-//	double &Dist;
-//}THREAD_DATA;
