@@ -322,7 +322,7 @@ bool Init_collimation()
 	//进入循环调节环节
 	//AfxMessageBox("进入循环调节");
 	int right_num = 0;
-	while(right_num<3)
+	while(right_num<5)
 	{	
 		if(Center_last.size()!=2)
 		{
@@ -355,7 +355,7 @@ bool Init_collimation()
 			Center_last.push_back(Center_now);
 			Center_last.pop_front();
 		}
-		else
+		else				//flag = true时向前移动
 		{
 			flag = false;
 
@@ -382,15 +382,17 @@ bool Init_collimation()
 			Center_last.pop_front();
 
 		}
+		//判断两次移动的过程中光斑中心的位置是否距离改变值小于1
 		if(abs(Center_last[1].x-Center_last[0].x)<1 && abs(Center_last[1].y-Center_last[0].y)<1 )
 		{
 			//AfxMessageBox("Z轴移动之后中心不变");
 			++right_num;
 		}
 		else
-		{//////
+		{
+			right_num = 0;
+			//计算出偏转角度，移动角位置台
 			cv::Point2d p1 = Center_last[0];
-
 			cv::Point2d p2 = Center_last[1];
 
 			CString xs1[4];
@@ -559,7 +561,7 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					{
 						t = clock();
 						endtime = t/CLOCKS_PER_SEC;
-						if(endtime - begintime > 5){
+						if(endtime - begintime > 10){
 							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
 							return false;
 						}
@@ -605,7 +607,7 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					{
 						t = clock();
 						endtime = t/CLOCKS_PER_SEC;
-						if(endtime - begintime > 5){
+						if(endtime - begintime > 10){
 							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
 							return false;
 						}
@@ -656,7 +658,7 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					{
 						t = clock();
 						endtime = t/CLOCKS_PER_SEC;
-						if(endtime - begintime > 5){
+						if(endtime - begintime > 10){
 							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
 							return false;
 						}
@@ -703,7 +705,7 @@ bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,double distance,int* BYTE_da
 					{
 						t = clock();
 						endtime = t/CLOCKS_PER_SEC;
-						if(endtime - begintime > 5){
+						if(endtime - begintime > 10){
 							AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
 							return false;
 						}

@@ -1516,8 +1516,56 @@ long CMainFrame::OnReceiveEvent(WPARAM wParam, LPARAM lParam)
 
 
 
+/*
+DWORD WINAPI FlashManualAdjustDialogUI(LPVOID lpParam)  
+{
+	while (!ThreadUIFlag)
+	{ 
+		HWND *cwnd = (HWND *)lpParam;
+		CButton *bt1 = (CButton*)cwnd->GetDlgItem(IDC_BUTTON_ADDX);
+		//ManualAdjustDialog* cdialog = (ManualAdjustDialog*)lpParam;
 
+		//CButton *bt1 = (CButton *)(cdialog->GetDlgItem(IDC_BUTTON_ADDX));
+		//CButton *bt2 = (CButton *)cdialog->GetDlgItem(IDC_BUTTON_DECX);
+		//CButton *bt3 = (CButton *)hwnd->GetDlgItem(IDC_BUTTON_ADDY);
+		//CButton *bt4 = (CButton *)hwnd->GetDlgItem(IDC_BUTTON_DECY);
+		//CButton *bt5 = (CButton *)hwnd->GetDlgItem(IDC_BUTTON_ADDZ);
+		//CButton *bt6 = (CButton *)hwnd->GetDlgItem(IDC_BUTTON_DECZ);
+		//CButton *bt1 = (CButton *)GetDlgItem(IDD_ADJUSTMENT,IDC_BUTTON_ADDX);
 
+		/*
+		bt1->(CButton *)GetDlgItem(IDC_BUTTON_ADDX);
+		bt2->(CButton *)GetDlgItem(IDC_BUTTON_DECX);
+		bt3->(CButton *)GetDlgItem(IDC_BUTTON_ADDY);
+		bt4->(CButton *)GetDlgItem(IDC_BUTTON_DECY);
+		bt5->(CButton *)GetDlgItem(IDC_BUTTON_ADDZ);
+		bt6->(CButton *)GetDlgItem(IDC_BUTTON_DECZ);
+	
+		//CButton *bt = (CButton*)ManualAdjustDialog::GetDlgItem(IDC_BUTTON_ADDX);
+		//如果标志位为真，说明按键的处理程序正在进行中，屏蔽所有的按键
+		if (buttonFlag == true)		
+		{
+			//bt1->EnableWindow(false);
+		/*	bt2->EnableWindow(false);
+			bt3->EnableWindow(false);
+			bt4->EnableWindow(false);
+			bt5->EnableWindow(false);
+			bt6->EnableWindow(false);;
+		}
+		//取消按键屏蔽
+		else
+		{
+			//bt1->EnableWindow(true);
+		/*	bt2->EnableWindow(true);
+			bt3->EnableWindow(true);
+			bt4->EnableWindow(true);
+			bt5->EnableWindow(true);
+			bt6->EnableWindow(true);;
+		}
+		
+	}
+	return 0;
+}*/
 
 void CMainFrame::OnManualAdjust()
 {
@@ -1528,8 +1576,18 @@ void CMainFrame::OnManualAdjust()
 		AfxMessageBox(_T("请先打开串口"));
 	}
 	else{
+		//创建一个刷新UI的进程
+		//ThreadUIFlag=0;
+		//Button_xyz bt;
+		//bt.bt1 = GetDlgItem()
+		
+		//HWND *hwnd = (HWND *)GetDlgItem(IDD_ADJUSTMENT);
+		//HANDLE FlashUI = CreateThread(NULL,0,FlashManualAdjustDialogUI, (LPVOID)hwnd,0,NULL);
+		
+		
 		ManualAdjustDialog ColDlg;
 		ColDlg.DoModal();		//弹出手动调整对话框
+		
 
 	}
 	

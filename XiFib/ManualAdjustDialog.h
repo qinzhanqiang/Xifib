@@ -27,4 +27,38 @@ public:
 	afx_msg void OnBnClickedButtonDecz();
 	afx_msg void OnEnChangeEdit1();
 	int Set_Distance;
+	
+	
+	
+public:
+	typedef enum AXISn
+	{
+		AXISx,
+		AXISy,
+		AXISz,
+		AXISxangle,
+		AXISyangle
+
+	}AXISn;
+
+	typedef enum DIRECTION{
+		FORWORD,
+		NEGITIVE
+	}DIRECTION;
+	bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int distance);
+	afx_msg void OnEnUpdateEditDistance();
+
+	
+	afx_msg void OnBnClickedButtonExit();
 };
+typedef struct Button_xyz{
+	CButton* bt1;
+	CButton* bt2;
+	CButton* bt3;
+	CButton* bt4;
+	CButton* bt5;
+	CButton* bt6;
+}Button_xyz;
+//extern volatile bool buttonFlag = false;
+
+DWORD WINAPI FlashManualAdjustDialogUI(LPVOID lpParam) ;
