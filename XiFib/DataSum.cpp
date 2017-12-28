@@ -41,6 +41,8 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  在此添加您专用的创建代码
 	CRect rect;
 	GetClientRect(&rect);
+
+
 	dataList.Create(WS_VISIBLE | WS_BORDER | LVS_REPORT, rect, this, 1);
 	dataList.SetExtendedStyle(dataList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	dataList.InsertColumn(0, "编号", LVCFMT_CENTER, 200);
@@ -64,7 +66,7 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	dataList.InsertItem(10, "10");
 	dataList.InsertItem(11, "均值");
 
-	dataList.ShowWindow(SW_SHOWNORMAL);
+	dataList.ShowWindow(SW_RESTORE);
 	return 0;
 }
 

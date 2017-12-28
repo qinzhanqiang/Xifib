@@ -57,12 +57,14 @@ int DataPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	GetClientRect(&rect);
 	dataList.Create(WS_VISIBLE|WS_BORDER|LVS_REPORT,rect,this,1);
 	dataList.SetExtendedStyle(dataList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES); 
-	dataList.InsertColumn(0, "属性", LVCFMT_CENTER, 80);
-	dataList.InsertColumn(1, "当前值", LVCFMT_CENTER, 80);
+	dataList.InsertColumn(0, "属性", LVCFMT_CENTER, 200);
+	dataList.InsertColumn(1, "属性", LVCFMT_CENTER, 200);
+	dataList.InsertColumn(2, "当前值", LVCFMT_CENTER,200);
 	//dataList.InsertColumn(2, "平均值", LVCFMT_CENTER, 80);
 	//dataList.InsertColumn(3, "最大值", LVCFMT_CENTER, 80);
 	//dataList.InsertColumn(4, "最小值", LVCFMT_CENTER, 80);
-	
+	dataList.DeleteColumn(0);
+
 	dataList.InsertItem(1,"峰值");
 	dataList.InsertItem(2,"X0");
 	dataList.InsertItem(3,"Y0");

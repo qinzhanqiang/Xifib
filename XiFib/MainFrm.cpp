@@ -330,7 +330,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // 未能创建
 	}
 	
-	if (!m_wndDataSum.Create(_T("DataSum"), this, CRect(0, 0, 100, 100), TRUE, 32815, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	if (!m_wndDataSum.Create(_T("DataSum"), this, CRect(0, 0, 100, 200), TRUE, 32815, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("未能创建输出窗口\n");
 		return FALSE; // 未能创建

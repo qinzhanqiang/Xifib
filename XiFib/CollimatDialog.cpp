@@ -117,6 +117,13 @@ void CCollimatDialog::OnBnClickedOk()
 DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 {
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
+	extern bool flag_start;
+	int mesure_success_n = 1;
+	double save_long = 0;
+	double save_short = 0;
+LOOP:
+	
+
 	//为圆形光纤则直接进行准直，楔形光纤则先计算偏轴度再进行准直
 	if(!FiberModelFlag)		//楔形光纤
 	{
@@ -133,15 +140,6 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 				AfxMessageBox(_T("准直成功"));
 				m_cRun = FALSE;
 				
-				//准直成功之后暂停
-				bool flag_start;
-				flag_start = false;
-
-				//ifstream m_fout;
-				//m_fout.open("data.txt");
-				CListCtrl m_SaveLists;
-				m_SaveLists.GetItemText(10,1);
-			
 			}
 			else
 			{
@@ -189,6 +187,40 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 		Dist = GetDivAngNew1(Xarr,Yarr,0.05,0.1);
 	}
 	AfxMessageBox(_T("测量成功"));
+	
+	//准直成功之后暂停
+	
+	flag_start = false;
+	//第n次准直完成标志位
+	LPSETUP lps = (LPSETUP)lpParameter;
+	CListCtrl &dataList = lps->ShowWin->m_wndData.dataList;
+	CListCtrl &dataSumList = lps->ShowWin->m_wndDataSum.dataList;
+	//保证进来时mesure_success_n 等于1
+	assert(mesure_success_n == 1);
+	if (mesure_success_n < 11) 
+	{
+		
+		//分别获取DataPane和DataSum中的CListCtrl
+		dataSumList.SetItemText(mesure_success_n, 2, dataList.GetItemText(6, 1)); //长轴发散角
+		dataSumList.SetItemText(mesure_success_n, 3, dataList.GetItemText(5, 1)); //短轴发散角
+		mesure_success_n ++;
+		flag_start = true;
+		goto LOOP;
+	}
+	//求平均值
+	assert(mesure_success_n == 11);
+	save_long = atof(dataSumList.GetItemText(1, 1)) + atof(dataSumList.GetItemText(2, 1)) + atof(dataSumList.GetItemText(3, 1)) + atof(dataSumList.GetItemText(4, 1)) + atof(dataSumList.GetItemText(5, 1)) +
+				atof(dataSumList.GetItemText(6, 1)) + atof(dataSumList.GetItemText(7, 1)) + atof(dataSumList.GetItemText(8, 1)) + atof(dataSumList.GetItemText(9, 1)) + atof(dataSumList.GetItemText(10, 1));
+	save_short = atof(dataSumList.GetItemText(1, 2)) + atof(dataSumList.GetItemText(2, 2)) + atof(dataSumList.GetItemText(3, 2)) + atof(dataSumList.GetItemText(4, 2)) + atof(dataSumList.GetItemText(5, 2)) +
+				atof(dataSumList.GetItemText(6, 2)) + atof(dataSumList.GetItemText(7, 2)) + atof(dataSumList.GetItemText(8, 2)) + atof(dataSumList.GetItemText(9, 2)) + atof(dataSumList.GetItemText(10, 2));
+	CString str;
+	str.Format("%.4lf", save_long / 10);
+	dataSumList.SetItemText(11, 1, str);
+	str.Format("%.4lf", save_short / 10);
+	dataSumList.SetItemText(11, 2, str);
+
+
+
 	return 0;
 }
 
