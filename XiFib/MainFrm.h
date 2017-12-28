@@ -13,6 +13,7 @@
 #include "ChangePDialog.h"
 #include "SCIDialog.h"
 #include "CollimatDialog.h"
+#include "DataSum.h"
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -57,12 +58,13 @@ public:
 	//悬浮停靠面板是放在主框架里面，注意不是放在子框架里面
 	CMFCStatusBar     m_wndStatusBar;
 	DataPane          m_wndData;
+	DataSum			  m_wndDataSum;
 	EllipsePane       m_wndEllipse;
 	//短轴面板
 	GaussPane         m_wndGauss;
 	//长轴面板
 	GaussPane         m_wndGaussL;
-
+	
 	XiPlayPane        m_wndPlay;
 	CAdjustDialog    *TZDlg;
 	CChangeDDiolag   *CCDlg;

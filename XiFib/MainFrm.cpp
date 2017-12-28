@@ -239,6 +239,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockPane(&m_wndPlay);
 	m_wndData.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndData);
+	m_wndDataSum.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndDataSum);
 /******************************************************************************************/
 
 	// 启用增强的窗口管理对话框
@@ -327,6 +329,13 @@ BOOL CMainFrame::CreateDockingWindows()
 		TRACE0("未能创建输出窗口\n");
 		return FALSE; // 未能创建
 	}
+	
+	if (!m_wndDataSum.Create(_T("DataSum"), this, CRect(0, 0, 100, 100), TRUE, 32815, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	{
+		TRACE0("未能创建输出窗口\n");
+		return FALSE; // 未能创建
+	}
+	
 	/******************************************************************************************/
 
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);

@@ -100,16 +100,20 @@ void EllipsePane::OnPaint()
 
 void EllipsePane::OnSize(UINT nType, int cx, int cy)
 {
-	if (0.75< cx/cy && cx/cy<1.25)
+	if (cy != 0) 
 	{
-		P0.x = cx/2;
-		P0.y = cy/2;
+		if (0.75< cx / cy && cx / cy<1.25)
+		{
+			P0.x = cx / 2;
+			P0.y = cy / 2;
+		}
+		else
+		{
+			int len = cx<cy ? cx : cy;
+			P0.x = P0.y = len / 2;
+		}
 	}
-	else
-	{
-		int len = cx<cy ? cx:cy;
-		P0.x = P0.y = len/2;
-	}
+	
 	lineL = (cx<cy ? cx:cy) * 0.45;  //坐标长度取窗口长度的90%
 	
 	InvalidateRect(NULL, TRUE);   //更新窗口,第二个参数设置为true可以在窗口缩小的时候刷新窗口
