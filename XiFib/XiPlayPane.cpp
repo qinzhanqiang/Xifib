@@ -130,6 +130,7 @@ BEGIN_MESSAGE_MAP(XiPlayPane, CDockablePane)
 END_MESSAGE_MAP()
 // XiPlayPane 消息处理程序
 
+//打开XiPlayPane会调用该函数
 BOOL XiPlayPane::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
@@ -139,7 +140,7 @@ BOOL XiPlayPane::OnEraseBkgnd(CDC* pDC)
 	return CDockablePane::OnEraseBkgnd(pDC);
 }
 
-
+//打开XiPlayPane会调用该函数
 void XiPlayPane::OnPaint()
 {
 	// TODO: 在此处添加消息处理程序代码
@@ -159,7 +160,7 @@ void XiPlayPane::OnPaint()
 //	//return CDockablePane::OnQueryDragIcon();
 //}
 
-
+//在XiPlayPane上点击右键菜单会调用该函数
 void XiPlayPane::OnRButtonDown(UINT nFlags, CPoint point)  //右键菜单
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
@@ -182,7 +183,8 @@ void XiPlayPane::OnRButtonDown(UINT nFlags, CPoint point)  //右键菜单
 			sdlgOpened = TRUE;
 			SetFocus();
 		}
-	}else{
+	}
+	else{
 		sdlg->ShowWindow(SW_HIDE);
 		sdlgOpened = FALSE;
 	}
@@ -191,7 +193,7 @@ void XiPlayPane::OnRButtonDown(UINT nFlags, CPoint point)  //右键菜单
 }
 
 /***********************************************************/
-     //关闭窗口，并保存设置、关闭设备
+//关闭窗口，并保存设置、关闭设备
 BOOL XiPlayPane::DestroyWindow()
 {
 	// TODO: 在此添加专用代码和/或调用基类
@@ -354,8 +356,8 @@ void XiPlayPane::OnTimer(UINT_PTR nIDEvent)
 				else
 				{
 					// create setup dialog instance
-					sdlg = new CSetup(this);
-					sdlg->Create(IDD_SETUP, this);
+					//sdlg = new CSetup(this);
+					//sdlg->Create(IDD_SETUP, this);
 					sdlgOpened = FALSE;
 					// ini acquisition dialog
 					pntInitPalette();
@@ -430,7 +432,7 @@ void XiPlayPane::RefreshWindowText()
 //*****************************************************************************
      //处理窗口大小变化
 void XiPlayPane::OnSize(UINT nType, int cx, int cy)
-{
+ {
 	CDockablePane::OnSize(nType, cx, cy);
 
 	CRect wndsize;
@@ -447,7 +449,7 @@ void XiPlayPane::OnSize(UINT nType, int cx, int cy)
 //*****************************************************************************
 
 //*****************************************************************************
-    //鼠标移动
+//在XiPlayPane上鼠标移动会调用该函数
 void XiPlayPane::OnMouseMove(UINT nFlags, CPoint point)
 {
 	CString t;

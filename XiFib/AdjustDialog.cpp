@@ -1,5 +1,5 @@
 // TZDialog.cpp : 实现文件
-//
+//点击 工具--调整 后跳出的调整距离对话框的实现
 
 #include "stdafx.h"
 #include "AdjustDialog.h"
@@ -11,6 +11,8 @@
 
 extern LPSETUP lps;   //保存设置的结构体
 extern pdsList pDSL;
+
+
 
 // CAdjustDialog 对话框
 
@@ -75,8 +77,7 @@ END_MESSAGE_MAP()
 
 
 // CAdjustDialog 消息处理程序
-
-
+//初始化对话框后执行的程序
 BOOL CAdjustDialog::OnInitDialog()
 {
 

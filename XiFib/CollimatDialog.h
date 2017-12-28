@@ -3,6 +3,9 @@
 #include<math.h>
 #include<stack>
 #include<vector>
+#include "afxcmn.h"
+#include <fstream>
+
 using namespace std;
 
 // CCollimatDialog 对话框
@@ -14,6 +17,7 @@ class CCollimatDialog : public CDialogEx
 public:
 	CCollimatDialog(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CCollimatDialog();
+	
 
 // 对话框数据
 	enum { IDD = IDD_COLLIMAT };

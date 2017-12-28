@@ -1,5 +1,5 @@
 // ManualAdjustDialog.cpp : 实现文件
-//
+//手动调节电控平移台实现文件
 
 #include "stdafx.h"
 #include "XiFib.h"
@@ -48,7 +48,7 @@ END_MESSAGE_MAP()
 
 
 // ManualAdjustDialog 消息处理程序
-
+//每个轴的调节线程
 DWORD WINAPI Threadaddx(LPVOID lpParam)  
 {  
 	ManualAdjustDialog mad;
@@ -98,11 +98,10 @@ DWORD WINAPI Threaddecz(LPVOID lpParam)
 	return 0;
 }
 
+//按键事件处理函数
 void ManualAdjustDialog::OnBnClickedButtonAddx()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	
-	
 
 	HANDLE addxthread = CreateThread(NULL,0,Threadaddx,(LPVOID)Set_Distance,0,NULL);
 	CloseHandle(addxthread);
@@ -167,14 +166,14 @@ void ManualAdjustDialog::OnEnChangeEdit1()
 
 
 
-
+//数据发送函数
 bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int distance)
 {
-	//extern volatile bool buttonFlag ;
+	//如果上次调节未完成，弹窗提醒并退出发送函数
 	if (buttonFlag == true)
 	{
 		AfxMessageBox(_T("请等待上次调整完成"));
-		return 0;
+		return false;
 	}
 	buttonFlag = true;
 	CMainFrame cmainfram;
@@ -192,6 +191,7 @@ bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int dist
 	data_Z = data_Z/10;
 	SData[3] = data_Z%10;
 
+	//根据选择的要调节的轴和方向对数组前三位进行选择
 	switch(X_or_Y_or_Z){
 	case AXISx:
 		{
@@ -287,7 +287,7 @@ bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int dist
 		};
 
 	}
-
+//发送数据
 sendmessage:
 	
 	((CMainFrame *)AfxGetMainWnd())->onSendMessage(SData);
@@ -299,6 +299,7 @@ sendmessage:
 	{
 		t = clock();
 		endtime = t/CLOCKS_PER_SEC;
+		//如果10S之内下位机无响应，弹窗提醒，退出发送函数
 		if(endtime - begintime > 10){
 			Sleep(100);
 			AfxMessageBox(_T("下位机无响应，将退出发送程序，发送失败！！"));
@@ -340,7 +341,7 @@ void ManualAdjustDialog::OnEnUpdateEditDistance()
 	
 }
 
-//extern volatile int ThreadUIFlag;
+//退出按键响应函数
 void ManualAdjustDialog::OnBnClickedButtonExit()
 {
 	// TODO: 在此添加控件通知处理程序代码

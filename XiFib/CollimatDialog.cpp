@@ -109,11 +109,11 @@ void CCollimatDialog::OnBnClickedOk()
 		0, 
 		NULL);//创建一个准直线程
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
-	CloseHandle(thread);//关闭线程9
+	CloseHandle(thread);//关闭线程句柄
 
 }
 
-
+//准直线程
 DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 {
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
@@ -132,6 +132,16 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 			{
 				AfxMessageBox(_T("准直成功"));
 				m_cRun = FALSE;
+				
+				//准直成功之后暂停
+				bool flag_start;
+				flag_start = false;
+
+				//ifstream m_fout;
+				//m_fout.open("data.txt");
+				CListCtrl m_SaveLists;
+				m_SaveLists.GetItemText(10,1);
+			
 			}
 			else
 			{
@@ -195,8 +205,8 @@ bool Init_collimation()
 	int flag_x_y = 0;						//角度&X,&Y移动方向
 
 	std::deque<cv::Point2d> Center_last;
-	double R_long = 0;						//圆心与中心的距离
-	
+	double R_long = 0;						//圆心与中心的距
+	//ifstream m_fout;
 	
 	double Z_distance = Distance; 
 	double L_short = LhalfW;				//短轴长度
@@ -250,7 +260,7 @@ bool Init_collimation()
 		if(L_short>130)
 		{
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -349,7 +359,7 @@ bool Init_collimation()
 				return false;
 			}
 			Z_distance+=Z0_L_R;
-			Sleep(1000);
+			Sleep(100);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
 			//储存当前中心坐标
 			Center_last.push_back(Center_now);
@@ -375,7 +385,7 @@ bool Init_collimation()
 				return false;
 			}
 			Z_distance-=Z0_L_R;
-			Sleep(1000);
+			Sleep(100);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
 			
 			Center_last.push_back(Center_now);
@@ -415,9 +425,9 @@ bool Init_collimation()
 			double Y_R = atan(Y_long*5.5/1000/Z0_L);
 
 			int dataX[3] = {0,0,0};
-			int data_X = abs(X_R/angel*180*3600);
+			int data_X = (int)abs(X_R/angel*180*3600);
 			int dataY[3] = {0,0,0};
-			int data_Y = abs(Y_R/angel*180*3600);
+			int data_Y = (int)abs(Y_R/angel*180*3600);
 
 			dataX[2] = data_X%60;
 			data_X = data_X/60;
@@ -1582,9 +1592,9 @@ bool close_to_ceter0(cv::Point2d P_now,deque<cv::Point2d> & Center_last)
 	if(abs(X_distace0)>long_limit || abs(Y_distace0)>long_limit)
 	{
 		int dataX[3] = {0,0,0};
-		int data_X = abs(X_distace0*5.5);//um
+		int data_X = (int)abs(X_distace0*5.5);//um
 		int dataY[3] = {0,0,0};
-		int data_Y = abs(Y_distace0*5.5);//um
+		int data_Y = (int)abs(Y_distace0*5.5);//um
 
 		data_X = data_X/10;
 		dataX[2] = data_X%10;
@@ -1665,14 +1675,15 @@ double Partial_degree(vector<cv::Point2d> arr)
 	double Thre=0.02;
 	double pi=3.1415926;
 	double AddL=0.5;
-	for(int i=0;i<arr.size();++i)
+
+	for(int i=0;i<(int) arr.size();++i)
 	{
-		for(int j=i+1;j<arr.size();++j)
+		for(int j=i+1;j<(int)arr.size();++j)
 		{
 			double SquareDiff=sqrt((arr[j].x-arr[i].x)*5.5*5.5*(arr[j].x-arr[i].x)+(arr[j].y-arr[i].y)*5.5*5.5*(arr[j].y-arr[i].y));
 			double ang=(atan(SquareDiff/1000/(j-i)/AddL))/pi*180;
 			int k;
-			for( k=0;k<ResultValue.size();++k)
+			for( k=0;k<(int)ResultValue.size();++k)
 			{
 				if(abs(ResultValue[k]-ang)<Thre)
 				{
@@ -1691,7 +1702,7 @@ double Partial_degree(vector<cv::Point2d> arr)
 
 	double maxnum=0;
 	double result=ResultValue[0];
-	for(int i=0;i<ResultNum.size();++i)
+	for(unsigned int i=0;i<ResultNum.size();++i)
 	{
 		if(ResultNum[i]>maxnum)
 		{
@@ -1719,11 +1730,11 @@ double GetDivAng(vector<double> arr,double Thre)
 	{
 		vector<double> ResultValue1;
 		vector<int> ResultNum1;
-		for(int i=0;i<arr.size();++i)
+		for(int i=0;i<(int)arr.size();++i)
 		{
 			double ang=2*(atan(arr[i]*5.5/1000/(Length+AddL*i)))/pi*180;
 			int j;
-			for(j=0;j<ResultValue1.size();++j)
+			for(j=0;j<(int)ResultValue1.size();++j)
 			{
 				if(abs(ang-ResultValue1[j])<Thre)
 				{
@@ -1749,7 +1760,7 @@ double GetDivAng(vector<double> arr,double Thre)
 	}
 	MaxNum=0;
 	Length=18;
-	int LeftLen=Length;
+	double LeftLen=Length;
 	while(Length>9)
 	{
 		vector<double> ResultValue1;
@@ -1876,7 +1887,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 		if(L_short>130)
 		{
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -1891,7 +1902,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 		else
 		{
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -1926,7 +1937,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 			break;
 		//向后移动采集
 		int data[3] = {0,0,0};
-		int data_Z = abs(AddL*100);
+		int data_Z = (int)abs(AddL*100);
 		data[2] = data_Z%10;
 		data_Z = data_Z/10;
 		data[1] = data_Z%10;
@@ -1937,7 +1948,7 @@ bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 	}
 	//回到原处
 	int data[3] = {0,0,0};
-	int data_Z = abs(AddL*(Num-1)*100);
+	int data_Z = (int)abs(AddL*(Num-1)*100);
 	data[2] = data_Z%10;
 	data_Z = data_Z/10;
 	data[1] = data_Z%10;
@@ -1962,7 +1973,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 		if(L_short>130)
 		{
 			int data[3] = {0,0,0};
-			int data_Z = abs(AddL*100);
+			int data_Z = (int)abs(AddL*100);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -1977,7 +1988,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 		else
 		{
 			int data[3] = {0,0,0};
-			int data_Z = abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -2008,7 +2019,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 			break;
 		//向后移动采集
 		int data[3] = {0,0,0};
-		int data_Z = abs(AddL*100);
+		int data_Z = (int)abs(AddL*100);
 		data[2] = data_Z%10;
 		data_Z = data_Z/10;
 		data[1] = data_Z%10;
@@ -2019,7 +2030,7 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 	}
 	//回到原处
 	int data[3] = {0,0,0};
-	int data_Z = abs(AddL*(Num-1)*100);
+	int data_Z = (int)abs(AddL*(Num-1)*100);
 	data[2] = data_Z%10;
 	data_Z = data_Z/10;
 	data[1] = data_Z%10;

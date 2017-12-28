@@ -694,6 +694,7 @@ void CSetup::OnClose()
 void CSetup::OnCancel()
 {
 	//theApp.wDlg->DestroyWindow();
+	//delete m_ExpandDialog;
 }
 
 void CSetup::OnDestroy()

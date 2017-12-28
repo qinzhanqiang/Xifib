@@ -1,3 +1,5 @@
+//ÍÖÔ²ÄâºÏ
+
 #include "StdAfx.h"
 #include "CEllipseFit.h"
 #include "CEllipse.h"

@@ -1,5 +1,5 @@
 // camSelect.cpp : implementation file
-//
+//文件--启动 之后选择相机
 
 #include "stdafx.h"
 #include "camSelect.h"

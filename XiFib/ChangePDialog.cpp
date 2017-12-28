@@ -1,5 +1,5 @@
 // ChangePDialog.cpp : 实现文件
-//
+//工具--偏移--偏移距离对话框实现函数
 
 #include "stdafx.h"
 #include "XiFib.h"
