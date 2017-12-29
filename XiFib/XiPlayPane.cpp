@@ -356,8 +356,8 @@ void XiPlayPane::OnTimer(UINT_PTR nIDEvent)
 				else
 				{
 					// create setup dialog instance
-					//sdlg = new CSetup(this);
-					//sdlg->Create(IDD_SETUP, this);
+					sdlg = new CSetup(this);
+					sdlg->Create(IDD_SETUP, this);
 					sdlgOpened = FALSE;
 					// ini acquisition dialog
 					pntInitPalette();

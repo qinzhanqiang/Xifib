@@ -4,7 +4,7 @@
 #include<stack>
 #include<vector>
 #include "afxcmn.h"
-#include <fstream>
+#include<algorithm>
 
 using namespace std;
 

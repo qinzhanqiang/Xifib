@@ -64,7 +64,7 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	dataList.InsertItem(8, "8");
 	dataList.InsertItem(9, "9");
 	dataList.InsertItem(10, "10");
-	dataList.InsertItem(11, "均值");
+	dataList.InsertItem(11, "均值(去掉最大值和最小值)");
 
 	dataList.ShowWindow(SW_RESTORE);
 	return 0;

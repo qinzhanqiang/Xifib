@@ -101,11 +101,12 @@ void CCollimatDialog::OnBnClickedOk()
 	threadData.LhW = LhalfW;
 	threadData.x = g_Px;
 	threadData.y = g_Py;*/
+	extern LPSETUP lps;
 	HANDLE thread = CreateThread(NULL, 
 		0, 
 		ThreadProcCollimat, 
 		//&threadData,
-		NULL,
+		lps,
 		0, 
 		NULL);//创建一个准直线程
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
@@ -118,11 +119,31 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 {
 	//WaitForSingleObject(g_hMutex, INFINITE);//请求获得一个互斥量锁
 	extern bool flag_start;
-	int mesure_success_n = 1;
-	double save_long = 0;
-	double save_short = 0;
+	int mesure_success_n = 0;
+	double save_aver_long = 0;
+	double save_aver_short = 0;
+	LPSETUP lps = (LPSETUP)lpParameter;
+	CListCtrl &dataList = lps->ShowWin->m_wndData.dataList;
+	CListCtrl &dataSumList = lps->ShowWin->m_wndDataSum.dataList;
+	
+	double data_long[10], data_short[10];
+	CString Cdata_long, Cdata_short;
+	assert(mesure_success_n == 0);
 LOOP:
 	
+	//分别获取DataPane和DataSum中的CListCtrl
+	if (mesure_success_n == 0)
+	{
+		dataSumList.DeleteColumn(1);
+		dataSumList.InsertColumn(1, "长轴发散角", LVCFMT_CENTER, 200);
+		dataSumList.DeleteColumn(2);
+		dataSumList.InsertColumn(2, "短轴发散角", LVCFMT_CENTER, 200);
+		for (size_t i = 0; i < 10; i++)
+		{
+			data_long[i] = 0;
+			data_long[i] = 0;
+		}
+	}
 
 	//为圆形光纤则直接进行准直，楔形光纤则先计算偏轴度再进行准直
 	if(!FiberModelFlag)		//楔形光纤
@@ -186,41 +207,50 @@ LOOP:
     	//Dist = GetDivAng(Yarr,0.01);
 		Dist = GetDivAngNew1(Xarr,Yarr,0.05,0.1);
 	}
-	AfxMessageBox(_T("测量成功"));
-	
+	//AfxMessageBox(_T("测量成功"));
+	Sleep(1000);
 	//准直成功之后暂停
+	//flag_start = false;
 	
-	flag_start = false;
-	//第n次准直完成标志位
-	LPSETUP lps = (LPSETUP)lpParameter;
-	CListCtrl &dataList = lps->ShowWin->m_wndData.dataList;
-	CListCtrl &dataSumList = lps->ShowWin->m_wndDataSum.dataList;
-	//保证进来时mesure_success_n 等于1
-	assert(mesure_success_n == 1);
-	if (mesure_success_n < 11) 
+	//从datapane中获取长轴发散角和短轴发散角
+	Cdata_long = dataList.GetItemText(6, 1);
+	Cdata_short = dataList.GetItemText(5, 1);
+	//将第mesure_success_n次的数据存储到数组中
+	data_long[mesure_success_n] = (atof(Cdata_long));			
+	data_short[mesure_success_n] = (atof(Cdata_short));
+	//在datasum中显示长轴发散角和短轴发散角
+	dataSumList.SetItemText(mesure_success_n, 1, Cdata_long); //长轴发散角
+	dataSumList.SetItemText(mesure_success_n, 2, Cdata_short); //短轴发散角
+
+	if (mesure_success_n < 9) 
 	{
-		
-		//分别获取DataPane和DataSum中的CListCtrl
-		dataSumList.SetItemText(mesure_success_n, 2, dataList.GetItemText(6, 1)); //长轴发散角
-		dataSumList.SetItemText(mesure_success_n, 3, dataList.GetItemText(5, 1)); //短轴发散角
 		mesure_success_n ++;
-		flag_start = true;
+		//flag_start = true;
+		Sleep(500);
 		goto LOOP;
 	}
 	//求平均值
-	assert(mesure_success_n == 11);
-	save_long = atof(dataSumList.GetItemText(1, 1)) + atof(dataSumList.GetItemText(2, 1)) + atof(dataSumList.GetItemText(3, 1)) + atof(dataSumList.GetItemText(4, 1)) + atof(dataSumList.GetItemText(5, 1)) +
-				atof(dataSumList.GetItemText(6, 1)) + atof(dataSumList.GetItemText(7, 1)) + atof(dataSumList.GetItemText(8, 1)) + atof(dataSumList.GetItemText(9, 1)) + atof(dataSumList.GetItemText(10, 1));
-	save_short = atof(dataSumList.GetItemText(1, 2)) + atof(dataSumList.GetItemText(2, 2)) + atof(dataSumList.GetItemText(3, 2)) + atof(dataSumList.GetItemText(4, 2)) + atof(dataSumList.GetItemText(5, 2)) +
-				atof(dataSumList.GetItemText(6, 2)) + atof(dataSumList.GetItemText(7, 2)) + atof(dataSumList.GetItemText(8, 2)) + atof(dataSumList.GetItemText(9, 2)) + atof(dataSumList.GetItemText(10, 2));
+	assert(mesure_success_n == 9);
+	//save_long = atof(dataSumList.GetItemText(1, 1)) + atof(dataSumList.GetItemText(2, 1)) + atof(dataSumList.GetItemText(3, 1)) + atof(dataSumList.GetItemText(4, 1)) + atof(dataSumList.GetItemText(5, 1)) +
+	//			atof(dataSumList.GetItemText(6, 1)) + atof(dataSumList.GetItemText(7, 1)) + atof(dataSumList.GetItemText(8, 1)) + atof(dataSumList.GetItemText(9, 1)) + atof(dataSumList.GetItemText(0, 1));
+	//save_short = atof(dataSumList.GetItemText(1, 2)) + atof(dataSumList.GetItemText(2, 2)) + atof(dataSumList.GetItemText(3, 2)) + atof(dataSumList.GetItemText(4, 2)) + atof(dataSumList.GetItemText(5, 2)) +
+	//			atof(dataSumList.GetItemText(6, 2)) + atof(dataSumList.GetItemText(7, 2)) + atof(dataSumList.GetItemText(8, 2)) + atof(dataSumList.GetItemText(9, 2)) + atof(dataSumList.GetItemText(0, 2));
+	//将数据进行排序处理
+	
+	std::sort(&data_long[0], &data_long[9]);
+	std::sort(&data_short[0], &data_short[9]);
+	//去掉最大值和最小值，求取平均值
+	save_aver_long = (data_long[1] + data_long[2] + data_long[3] + data_long[4] + data_long[5] + data_long[6] + data_long[7] + data_long[8])/8;
+	save_aver_short = (data_short[1] + data_short[2] + data_short[3] + data_short[4] + data_short[5] + data_short[6] + data_short[7] + data_short[8]) / 8;
+	//在datasum中显示求得的均值
 	CString str;
-	str.Format("%.4lf", save_long / 10);
-	dataSumList.SetItemText(11, 1, str);
-	str.Format("%.4lf", save_short / 10);
-	dataSumList.SetItemText(11, 2, str);
+	str.Format("%.4lf", save_aver_long);
+	dataSumList.SetItemText(10, 1, str);
+	str.Format("%.4lf", save_aver_short / 10);
+	dataSumList.SetItemText(10, 2, str);
 
-
-
+	mesure_success_n = 0;
+	AfxMessageBox(_T("测量成功"));
 	return 0;
 }
 
