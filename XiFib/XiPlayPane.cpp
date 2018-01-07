@@ -323,16 +323,17 @@ void XiPlayPane::OnTimer(UINT_PTR nIDEvent)
 			camSel.GetIndex(&devIndex);
 			camSel.DoModal();
 		}
-		
+		//1 0
 		if (!auto_bandwidth_measure_enabled || bandwidth_limit_enabled)
 		{
 			// disable auto bandwidth calculation
 			xiSetParamInt(0,XI_PRM_AUTO_BANDWIDTH_CALCULATION, 0);
 		}
+		//0
 		lps->devIndex = devIndex;
 		if (devices) {
 			ret = xiOpenDevice(devIndex, &hMV );   //如果发现设备，启动设备
-			if (bandwidth_limit_enabled)
+			if (bandwidth_limit_enabled)//0
 			{
 				xiSetParamInt(hMV,XI_PRM_LIMIT_BANDWIDTH, bandwidth_limit_MBPS*8);
 			}
@@ -357,6 +358,7 @@ void XiPlayPane::OnTimer(UINT_PTR nIDEvent)
 				{
 					// create setup dialog instance
 					sdlg = new CSetup(this);
+					//sdlg->DoModal();
 					sdlg->Create(IDD_SETUP, this);
 					sdlgOpened = FALSE;
 					// ini acquisition dialog
@@ -367,7 +369,7 @@ void XiPlayPane::OnTimer(UINT_PTR nIDEvent)
 					xiGetParamInt(hMV, XI_PRM_DEVICE_SN, (int *)&lps->dwSerial);
 					xiGetParamString(hMV, XI_PRM_DEVICE_TYPE, lps->devType, MAX_PATH);
 					
-					if(isRunWithSN)LoadPresetsFromReg(hMV);     //加载设置
+					if(isRunWithSN)	LoadPresetsFromReg(hMV);     //加载设置
 					shStartLive(hMV, this);	     //启动摄像头
 					SetTimer( TIMER_ID, TIMEOUT, NULL );
 
@@ -735,6 +737,10 @@ int XiPlayPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//第二个参数为定时时长，第三个参数为回调函数指针,第三个参数是一个回调函数，
 	//在这个函数里，放入你想要做的事情的代码，
 	//你可以将它设定为NULL，也就是使用系统默认的回调函数，系统默认认的是onTime函数。
+	long style = GetWindowLong(m_hWnd, GWL_STYLE);
+	style &= ~WS_SYSMENU;
+	SetWindowLong(m_hWnd, GWL_STYLE, style);
+
 	return 0;
 }
 

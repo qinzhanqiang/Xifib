@@ -14,6 +14,7 @@
 #include "SCIDialog.h"
 #include "CollimatDialog.h"
 #include "DataSum.h"
+#include "Setup.h"
 
 class CMainFrame : public CMDIFrameWndEx
 {

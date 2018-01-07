@@ -130,14 +130,14 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 	CString Cdata_long, Cdata_short;
 	assert(mesure_success_n == 0);
 LOOP:
-	
+	//m_cRun = TRUE;
 	//分别获取DataPane和DataSum中的CListCtrl
 	if (mesure_success_n == 0)
 	{
 		dataSumList.DeleteColumn(1);
-		dataSumList.InsertColumn(1, "长轴发散角", LVCFMT_CENTER, 200);
+		dataSumList.InsertColumn(1, "长轴发散角", LVCFMT_CENTER, 150);
 		dataSumList.DeleteColumn(2);
-		dataSumList.InsertColumn(2, "短轴发散角", LVCFMT_CENTER, 200);
+		dataSumList.InsertColumn(2, "短轴发散角", LVCFMT_CENTER, 150);
 		for (size_t i = 0; i < 10; i++)
 		{
 			data_long[i] = 0;
@@ -153,21 +153,27 @@ LOOP:
 		DataGetPoint(arr);
 		//cout<<"偏轴度为："<<Partial_degree(arr)<<endl;//这个的double值赋给偏轴度的变量;
 		PartialAng = Partial_degree(arr);
-		while(m_cRun)
+		
+		if(m_cRun)
 		{
 
 			if(Init_collimation())
 			{
 				AfxMessageBox(_T("准直成功"));
-				m_cRun = FALSE;
+				//m_cRun = FALSE;
 				
 			}
 			else
 			{
 				AfxMessageBox(_T("准直失败"));
-				m_cRun = FALSE;
+				return;
+				//m_cRun = FALSE;
 			}
 
+		}
+		else 
+		{
+			return;
 		}
 
 		vector<double> Xarr;
@@ -181,20 +187,25 @@ LOOP:
 	}
 	else		//圆形光纤
 	{
-		while(m_cRun)
+		if(m_cRun)
 		{
 
 			if(Init_collimation())
 			{
 				AfxMessageBox(_T("准直成功"));
-				m_cRun = FALSE;
+				//m_cRun = FALSE;
 			}
 			else
 			{
 				AfxMessageBox(_T("准直失败"));
-				m_cRun = FALSE;
+				return;
+				//m_cRun = FALSE;
 			}
 
+		}
+		else
+		{
+			return;
 		}
 
 		vector<double> Xarr;
@@ -246,7 +257,7 @@ LOOP:
 	CString str;
 	str.Format("%.4lf", save_aver_long);
 	dataSumList.SetItemText(10, 1, str);
-	str.Format("%.4lf", save_aver_short / 10);
+	str.Format("%.4lf", save_aver_short);
 	dataSumList.SetItemText(10, 2, str);
 
 	mesure_success_n = 0;

@@ -1301,10 +1301,12 @@ void CMainFrame::OnAuto()
 	// TODO: 在此添加命令处理程序代码
 }
 
+CSetup *camerasetup = new CSetup;
 
 void CMainFrame::OnPara()
 {
 	// TODO: 在此添加命令处理程序代码
+	camerasetup->DoModal();
 }
 
 
