@@ -38,6 +38,8 @@ public:
 	afx_msg void OnBnClickedOk();
 	
 	
+	
+	CString fiberNum;
 };
 
 typedef enum AXISn

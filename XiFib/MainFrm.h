@@ -16,6 +16,7 @@
 #include "DataSum.h"
 #include "Setup.h"
 
+
 class CMainFrame : public CMDIFrameWndEx
 {
 	#define WM_MYMSG WM_USER+100
@@ -153,6 +154,8 @@ public:
 	afx_msg void OnUpdateStopCollimat(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateCollimat(CCmdUI *pCmdUI);
 	afx_msg void OnManualAdjust();
+	afx_msg void OnSaveData();
+	static void SaveData();
 };
 
 

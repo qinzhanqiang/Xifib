@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_STOP_COLLIMAT, &CMainFrame::OnUpdateStopCollimat)
 	ON_UPDATE_COMMAND_UI(ID_COLLIMAT, &CMainFrame::OnUpdateCollimat)
 	ON_COMMAND(ID_MANUAL_ADJUST, &CMainFrame::OnManualAdjust)
+	ON_COMMAND(ID_SAVE_DATA, &CMainFrame::OnSaveData)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -991,12 +992,14 @@ void CMainFrame::OnCollimat()
 		ColDlg = new CCollimatDialog(ColDlg);
 		ColDlg->Create(IDD_COLLIMAT,this); 
 	}
+	
 	if (!flag_start)
 	{
 		CString str("系统未启动，请先启动");
 		MessageBox(str, _T("警告"), MB_OK | MB_ICONWARNING); 
 		return;
 	}
+	
 	ColDlg->ShowWindow(SW_SHOW);
 	return;  
 
@@ -1603,4 +1606,67 @@ void CMainFrame::OnManualAdjust()
 	}
 	
 	
+}
+extern CString fiberNumber;
+void CMainFrame::SaveData()
+{
+	CString filePath;
+	CString fileName = "测量数据.txt";
+	bool fileFlag = false;
+	//获取当前程序所在的目录,并添加文件名
+	GetModuleFileName(NULL, filePath.GetBufferSetLength(MAX_PATH + 1), MAX_PATH);
+	filePath.ReleaseBuffer(MAX_PATH + 1);
+	int nPos = filePath.ReverseFind('\\');
+	filePath = filePath.Left(nPos + 1);
+	filePath = filePath + fileName;
+	//获取当前系统时间
+	CString time;
+	CTime tm;
+	tm = CTime::GetCurrentTime();
+	time = tm.Format("时间：%Y年%m月%d日 %X");
+	//打开文件
+	CFile saveDataFile;
+	fileFlag = saveDataFile.Open(filePath, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate);
+	if (fileFlag == false)
+	{
+		AfxMessageBox(_T("打开文件失败"));
+	}
+	saveDataFile.SeekToEnd();
+	//写入当前时间
+	saveDataFile.Write(time + "\r\n" + "\r\n", time.GetLength() + 4);
+	//写入光纤编号
+	CString str;
+	str = "光纤编号：";
+	str = str + fiberNumber + "\r\n\r\n";
+	saveDataFile.Write(str, str.GetLength());
+
+	//写入数据
+	
+	str = "编号		长轴发散角	短轴发散角 ";
+	saveDataFile.Write(str, str.GetLength());
+	saveDataFile.Write("\r\n\r\n", 5);
+
+
+	//写入数据
+	CString data;
+	CListCtrl &dataSumList = lps->ShowWin->m_wndDataSum.dataList;
+	for (int i = 0; i < 11; i++)
+	{
+		data = dataSumList.GetItemText(i, 0);
+		data = data + "		" + dataSumList.GetItemText(i, 1);
+		data = data + "		" + dataSumList.GetItemText(i, 2);
+		saveDataFile.Write(data, data.GetLength());
+		saveDataFile.Write("\r\n", 3);
+	}
+	saveDataFile.Write("\r\n\r\n", 5);
+
+
+	saveDataFile.Close();
+
+	AfxMessageBox(_T("保存数据成功！"));
+}
+void CMainFrame::OnSaveData()
+{
+	// TODO: 在此添加命令处理程序代码
+	SaveData();
 }

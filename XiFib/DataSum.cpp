@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "XiFib.h"
 #include "DataSum.h"
+#include "Resource.h"
 
 
 // DataSum
@@ -17,6 +18,7 @@ DataSum::DataSum()
 
 DataSum::~DataSum()
 {
+	
 }
 
 
@@ -24,6 +26,7 @@ BEGIN_MESSAGE_MAP(DataSum, CDockablePane)
 	ON_WM_CREATE()
 	ON_WM_PAINT()
 	ON_WM_SIZE()
+	
 END_MESSAGE_MAP()
 
 
@@ -64,9 +67,12 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	dataList.InsertItem(8, "8");
 	dataList.InsertItem(9, "9");
 	dataList.InsertItem(10, "10");
-	dataList.InsertItem(11, "均值(去掉最大值和最小值)");
+	dataList.InsertItem(11, "均值");
 
 	dataList.ShowWindow(SW_RESTORE);
+
+	
+
 	return 0;
 }
 
@@ -92,3 +98,6 @@ void DataSum::OnSize(UINT nType, int cx, int cy)
 	//dataList.ShowWindow(SW_SHOW);
 	//InvalidateRect(NULL, true);
 }
+
+
+

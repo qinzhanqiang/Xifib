@@ -24,6 +24,7 @@ CCollimatDialog::CCollimatDialog(CWnd* pParent /*=NULL*/)
 	/*, m_ShortAngle()
 	, m_LongAngle()
 	, m_OffAngle()*/
+	, fiberNum(_T(""))
 {
 
 }
@@ -40,13 +41,14 @@ void CCollimatDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SHORT_DIV_ANGLE, m_ShortAngle);
 	DDX_Control(pDX, IDC_LONG_DIV_ANGLE, m_LongAngle);
 	DDX_Control(pDX, IDC_OFF_ANGLE, m_OffAngle);
+	DDX_Text(pDX, IDC_FIBER_NUM, fiberNum);
 }
 
 
 BEGIN_MESSAGE_MAP(CCollimatDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_CIRCLE_FIBER, &CCollimatDialog::OnBnClickedCircleFiber)
 	ON_BN_CLICKED(IDC_WEDGE_FIBER, &CCollimatDialog::OnBnClickedWedgeFiber)
-	ON_BN_CLICKED(IDOK, &CCollimatDialog::OnBnClickedOk)
+	ON_BN_CLICKED(IDOK, &CCollimatDialog::OnBnClickedOk)	
 END_MESSAGE_MAP()
 
 
@@ -88,11 +90,14 @@ BOOL CCollimatDialog::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-
+CString fiberNumber;
 void CCollimatDialog::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CDialogEx::OnOK();
+	GetDlgItem(IDC_FIBER_NUM)->GetWindowText(fiberNum);
+	fiberNumber = fiberNum;
+
 	/******************准直线程****************/
 	m_cRun = TRUE;
 	//初始化线程数据
@@ -159,7 +164,7 @@ LOOP:
 
 			if(Init_collimation())
 			{
-				AfxMessageBox(_T("准直成功"));
+				//AfxMessageBox(_T("准直成功"));
 				//m_cRun = FALSE;
 				
 			}
@@ -192,7 +197,7 @@ LOOP:
 
 			if(Init_collimation())
 			{
-				AfxMessageBox(_T("准直成功"));
+				//AfxMessageBox(_T("准直成功"));
 				//m_cRun = FALSE;
 			}
 			else
@@ -262,6 +267,9 @@ LOOP:
 
 	mesure_success_n = 0;
 	AfxMessageBox(_T("测量成功"));
+	
+	//测量成功之后自动调用保存函数
+	CMainFrame::SaveData();
 	return 0;
 }
 
@@ -2112,3 +2120,4 @@ bool DataGetPoint(vector<cv::Point2d> &arr)
 	trans(AXISz,NEGITIVE,AddL*(Num-1),data);//反复向后移动	
 	return true;
 }
+
