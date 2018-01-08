@@ -79,7 +79,7 @@ static int image_cycle_sleep_ms=1;
 
 void Acquisition_Init()
 
-{
+ {
 	printf("Acquisition_Init\n");
 	memset(&setup,0,sizeof(setup));
 	for (int i=0;i<sizeof(DSL)/sizeof(dsList);i++)

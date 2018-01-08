@@ -166,14 +166,14 @@ LOOP:
 			else
 			{
 				AfxMessageBox(_T("准直失败"));
-				return;
+				return false;
 				//m_cRun = FALSE;
 			}
 
 		}
 		else 
 		{
-			return;
+			return false;
 		}
 
 		vector<double> Xarr;
@@ -198,14 +198,14 @@ LOOP:
 			else
 			{
 				AfxMessageBox(_T("准直失败"));
-				return;
+				return false;
 				//m_cRun = FALSE;
 			}
 
 		}
 		else
 		{
-			return;
+			return false;
 		}
 
 		vector<double> Xarr;

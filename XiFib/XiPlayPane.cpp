@@ -390,7 +390,7 @@ void XiPlayPane::OnTimer(UINT_PTR nIDEvent)
 						wpp.rcNormalPosition.top = 0;
 						wpp.rcNormalPosition.right = nScreenWidth/2;
 						wpp.rcNormalPosition.bottom = nScreenHeight/2;
-						SetWindowPlacement( &wpp );
+						//SetWindowPlacement( &wpp );
 					}
 				}
 			}
@@ -495,14 +495,14 @@ void XiPlayPane::OnMouseMove(UINT nFlags, CPoint point)
 }
 
 //*****************************************************************************
-
+/*
 void XiPlayPane::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CWnd::OnLButtonDown(nFlags, point);
 	lps->cDragPoint = lps->cLBDpoint = point;
 	InvalidateRect( NULL, FALSE );
 }
-
+*/
 //*****************************************************************************
      //鼠标滚动
 BOOL XiPlayPane::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
@@ -737,9 +737,9 @@ int XiPlayPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//第二个参数为定时时长，第三个参数为回调函数指针,第三个参数是一个回调函数，
 	//在这个函数里，放入你想要做的事情的代码，
 	//你可以将它设定为NULL，也就是使用系统默认的回调函数，系统默认认的是onTime函数。
-	long style = GetWindowLong(m_hWnd, GWL_STYLE);
-	style &= ~WS_SYSMENU;
-	SetWindowLong(m_hWnd, GWL_STYLE, style);
+	//long style = GetWindowLong(m_hWnd, GWL_STYLE);
+	//style &= ~WS_SYSMENU;
+	//SetWindowLong(m_hWnd, GWL_STYLE, style);
 
 	return 0;
 }
