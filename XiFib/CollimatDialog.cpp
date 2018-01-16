@@ -132,7 +132,7 @@ DWORD WINAPI ThreadProcCollimat(LPVOID lpParameter)
 	CListCtrl &dataSumList = lps->ShowWin->m_wndDataSum.dataList;
 	
 	double data_long[10], data_short[10];
-	CString Cdata_long, Cdata_short;
+	CString Cdata_long, Cdata_short,Cdata_x0,Cdata_y0;
 	assert(mesure_success_n == 0);
 LOOP:
 	//m_cRun = TRUE;
@@ -140,9 +140,13 @@ LOOP:
 	if (mesure_success_n == 0)
 	{
 		dataSumList.DeleteColumn(1);
-		dataSumList.InsertColumn(1, "长轴发散角", LVCFMT_CENTER, 150);
+		dataSumList.InsertColumn(1, "长轴发散角", LVCFMT_CENTER, 100);
 		dataSumList.DeleteColumn(2);
-		dataSumList.InsertColumn(2, "短轴发散角", LVCFMT_CENTER, 150);
+		dataSumList.InsertColumn(2, "短轴发散角", LVCFMT_CENTER, 100);
+		dataSumList.DeleteColumn(3);
+		dataList.InsertColumn(3, "X0", LVCFMT_CENTER, 100);
+		dataSumList.DeleteColumn(4);
+		dataList.InsertColumn(4, "Y0", LVCFMT_CENTER, 100);
 		for (size_t i = 0; i < 10; i++)
 		{
 			data_long[i] = 0;
@@ -228,15 +232,19 @@ LOOP:
 	//准直成功之后暂停
 	//flag_start = false;
 	
-	//从datapane中获取长轴发散角和短轴发散角
+	//从datapane中获取长轴发散角和短轴发散角和中心坐标
 	Cdata_long = dataList.GetItemText(6, 1);
 	Cdata_short = dataList.GetItemText(5, 1);
+	Cdata_x0 = dataList.GetItemText(1,1);
+	Cdata_y0 = dataList.GetItemText(2, 1);
 	//将第mesure_success_n次的数据存储到数组中
 	data_long[mesure_success_n] = (atof(Cdata_long));			
 	data_short[mesure_success_n] = (atof(Cdata_short));
 	//在datasum中显示长轴发散角和短轴发散角
 	dataSumList.SetItemText(mesure_success_n, 1, Cdata_long); //长轴发散角
 	dataSumList.SetItemText(mesure_success_n, 2, Cdata_short); //短轴发散角
+	dataSumList.SetItemText(mesure_success_n, 3, Cdata_x0);		//x0
+	dataSumList.SetItemText(mesure_success_n, 4, Cdata_y0);		//y0
 
 	if (mesure_success_n < 9) 
 	{
@@ -264,6 +272,16 @@ LOOP:
 	dataSumList.SetItemText(10, 1, str);
 	str.Format("%.4lf", save_aver_short);
 	dataSumList.SetItemText(10, 2, str);
+	//最大值
+	str.Format("%.4lf", data_long[9]);
+	dataSumList.SetItemText(11, 1, str);
+	str.Format("%.4lf", data_short[9]);
+	dataSumList.SetItemText(11, 2, str);
+	//最小值
+	str.Format("%.4lf", data_long[0]);
+	dataSumList.SetItemText(12, 1, str);
+	str.Format("%.4lf", data_long[0]);
+	dataSumList.SetItemText(12, 2, str);
 
 	mesure_success_n = 0;
 	AfxMessageBox(_T("测量成功"));
@@ -279,9 +297,9 @@ LOOP:
 //flag：=1对应于正向，=0对应于负向；
 bool Init_collimation()
 {
-	double Z0_L = 5;//每次将Z轴进行移动的距离
+	double Z0_L = 10;//每次将Z轴进行移动的距离
 	double Z0_L_R=2;
-	double Z0_C=1;
+	double Z0_C=1;							//判断短轴长度是否在120到130时移动的距离
 	bool flag = false;						//Z轴移动方向标记
 	int flag_x_y = 0;						//角度&X,&Y移动方向
 
@@ -341,7 +359,7 @@ bool Init_collimation()
 		if(L_short>130)
 		{
 			int data[3] = {0,0,0};
-			int data_Z = (int)abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);	//每次移动100um
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -356,7 +374,7 @@ bool Init_collimation()
 		else
 		{
 			int data[3] = {0,0,0};
-			int data_Z = (int)abs(Z0_C*100);
+			int data_Z = (int)abs(Z0_C*100);	//每次移动100um
 			data[2] = data_Z%10;
 			data_Z = data_Z/10;
 			data[1] = data_Z%10;
@@ -391,12 +409,12 @@ bool Init_collimation()
 			data[1] = data_Z%10;
 			data_Z = data_Z/10;
 			data[0] = data_Z;
-			if(!trans(AXISz,FORWORD,Z0_L,data))
+			if(!trans(AXISz,FORWORD, Z0_L_R,data))
 			{
 				AfxMessageBox("Z轴移动出错");
 				return false;
 			}
-			Z_distance+=Z0_L;
+			Z_distance+= Z0_L_R;
 
 			Sleep(1000);
 			cv::Point2d Center_now=In_Center_Point(g_Px,g_Py);
@@ -421,7 +439,7 @@ bool Init_collimation()
 			return false;
 		}
 		
-		//AfxMessageBox("Z轴移动一次，记录数据");
+		//初始化时定义了flag=false，第一次移动时向后移动
 		if(flag == false)		//flag = false时向后移动
 		{
 			flag = true;
@@ -1807,6 +1825,7 @@ double GetDivAng(vector<double> arr,double Thre)
 	int MaxNum=0;
 	
 	double RightLen=Length;
+	
 	while(Length<18)
 	{
 		vector<double> ResultValue1;
@@ -1814,8 +1833,9 @@ double GetDivAng(vector<double> arr,double Thre)
 		for(int i=0;i<(int)arr.size();++i)
 		{
 			double ang=2*(atan(arr[i]*5.5/1000/(Length+AddL*i)))/pi*180;
+			//判断下一个值和存在数组中的每个值相差的阈值范围
 			int j;
-			for(j=0;j<(int)ResultValue1.size();++j)
+			for(j=0;j<ResultValue1.size();++j)
 			{
 				if(abs(ang-ResultValue1[j])<Thre)
 				{
@@ -1881,7 +1901,7 @@ double GetDivAng(vector<double> arr,double Thre)
 double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double ThreY)
 {
 	double AddL=0.5;
-	double pi=3.1415926;
+	const double pi=3.1415926;
 	double Length=9.0;
 	int MaxNum=0;
 	double RightLen=Length;
@@ -1889,6 +1909,7 @@ double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double
 	{
 		vector<double> ResultValue1;
 		vector<int> ResultNum1;
+
 		for(int i=0;i<arrX.size();++i)
 		{
 			double ang=2*(atan(arrX[i]*5.5/1000/(Length+AddL*i)))/pi*180;
@@ -1904,6 +1925,7 @@ double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double
 				}
 			}
 		}
+		//求最大值
 		int maxnow=0;
 		for(int i=0;i<ResultNum1.size();++i)
 		{
@@ -1951,6 +1973,54 @@ double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double
 	}
 	return RightLen;
 }
+
+//求当所有数据计算出来的发散角的方差最小时distance的长度
+double GetDis(vector<double> &arr)
+{
+	const double pi = 3.141592654;	
+	double Length = 10.0;
+	double LengthIndex = 0;
+	double arrSum = 0;
+	double arrAve = 0;
+	double varianceMin;
+	double result;
+	vector<double> variance;
+	
+	
+	while (Length < 18) 
+	{		
+		for (int i = 0; i < arr.size(); i++) 
+		{
+			double ang = 2 * (atan(arr[i] * 5.5 / 1000 / Length)) / pi * 180;
+			arrSum += ang;
+		}
+		arrAve = arrSum / (arr.size());				//求均值
+		for (int i = 0; i < arr.size(); i++)
+		{
+			variance[LengthIndex] += (arr[i] - arrAve) * (arr[i] - arrAve);
+		}
+		variance[LengthIndex] /= arr.size();		//求方差
+
+		LengthIndex++;
+		Length += 0.1;		
+	}
+
+	for (int i = 0; i < LengthIndex; i++)
+	{
+		if (variance[i] < varianceMin)
+		{
+			varianceMin = variance[i];
+			result = 10.0 + i * 0.1;
+		}
+	}
+	
+	return result;
+
+}
+
+
+
+
 //数据采集
 bool DataGetLength(vector<double> &Xarr,vector<double> &Yarr)
 {

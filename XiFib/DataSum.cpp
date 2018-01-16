@@ -48,14 +48,14 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	dataList.Create(WS_VISIBLE | WS_BORDER | LVS_REPORT, rect, this, 1);
 	dataList.SetExtendedStyle(dataList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-	dataList.InsertColumn(0, "编号", LVCFMT_CENTER, 200);
-	dataList.InsertColumn(1, "编号", LVCFMT_CENTER, 200);
-	dataList.InsertColumn(2, "长轴发散角", LVCFMT_CENTER, 200);
-	dataList.InsertColumn(3, "短轴发散角", LVCFMT_CENTER, 200);
+	dataList.InsertColumn(0, "编号", LVCFMT_CENTER, 100);
+	dataList.InsertColumn(1, "编号", LVCFMT_CENTER, 100);
+	dataList.InsertColumn(2, "长轴发散角", LVCFMT_CENTER, 150);
+	dataList.InsertColumn(3, "短轴发散角", LVCFMT_CENTER, 150);
+	dataList.InsertColumn(4, "X0", LVCFMT_CENTER, 100);
+	dataList.InsertColumn(5, "Y0", LVCFMT_CENTER, 100);
 	dataList.DeleteColumn(0);
-	//dataList.InsertColumn(2, "平均值", LVCFMT_CENTER, 80);
-	//dataList.InsertColumn(3, "最大值", LVCFMT_CENTER, 80);
-	//dataList.InsertColumn(4, "最小值", LVCFMT_CENTER, 80);
+	
 
 	dataList.InsertItem(1, "1");
 	dataList.InsertItem(2, "2");
@@ -68,6 +68,9 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	dataList.InsertItem(9, "9");
 	dataList.InsertItem(10, "10");
 	dataList.InsertItem(11, "均值");
+	dataList.InsertItem(12, "最大值");
+	dataList.InsertItem(13, "最小值");
+
 
 	dataList.ShowWindow(SW_RESTORE);
 

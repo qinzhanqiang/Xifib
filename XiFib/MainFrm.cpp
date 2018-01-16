@@ -1642,7 +1642,7 @@ void CMainFrame::SaveData()
 
 	//Ð´ÈëÊý¾Ý
 	
-	str = "±àºÅ		³¤Öá·¢É¢½Ç	¶ÌÖá·¢É¢½Ç ";
+	str = "±àºÅ    ³¤Öá·¢É¢½Ç    	¶ÌÖá·¢É¢½Ç    X0    Y0";
 	saveDataFile.Write(str, str.GetLength());
 	saveDataFile.Write("\r\n\r\n", 5);
 
@@ -1650,11 +1650,13 @@ void CMainFrame::SaveData()
 	//Ð´ÈëÊý¾Ý
 	CString data;
 	CListCtrl &dataSumList = lps->ShowWin->m_wndDataSum.dataList;
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 13; i++)
 	{
 		data = dataSumList.GetItemText(i, 0);
-		data = data + "		" + dataSumList.GetItemText(i, 1);
-		data = data + "		" + dataSumList.GetItemText(i, 2);
+		data = data + "    " + dataSumList.GetItemText(i, 1);
+		data = data + "    " + dataSumList.GetItemText(i, 2);
+		data = data + "    " + dataSumList.GetItemText(i, 3);
+		data = data + "    " + dataSumList.GetItemText(i, 4);
 		saveDataFile.Write(data, data.GetLength());
 		saveDataFile.Write("\r\n", 3);
 	}
