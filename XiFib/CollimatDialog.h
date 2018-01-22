@@ -56,7 +56,16 @@ typedef enum DIRECTION{
 	FORWORD,
 	NEGITIVE
 }DIRECTION;
+
+typedef enum TRANSTYPE {
+	ANGLEShort,
+	ANGLELong,
+	COORDSx,
+	COORDSy
+}TRANSTYPE;
+
 bool Init_collimation();
+bool transLCD(TRANSTYPE type, double longangle);
 bool trans(AXISn X_or_Y,DIRECTION up_down_flag,double distance,int* BYTE_data);
 cv::Point2d In_Center_Point(double xc,double yc);
 bool close_to_ceter0(cv::Point2d P_now,deque<cv::Point2d> & Center_last);
@@ -69,3 +78,5 @@ double Partial_degree(vector<cv::Point2d> arr);
 //∑¢…¢Ω«º∆À„
 double GetDivAng(vector<double> arr,double Thre);
 double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double ThreY);
+
+double GetDis(vector<double> &arr);

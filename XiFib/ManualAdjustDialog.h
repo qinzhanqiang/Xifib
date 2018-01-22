@@ -37,7 +37,9 @@ public:
 		AXISy,
 		AXISz,
 		AXISxangle,
-		AXISyangle
+		AXISyangle,
+		AXISlongAngle,
+		AXISshortAngle
 
 	}AXISn;
 
@@ -45,11 +47,16 @@ public:
 		FORWORD,
 		NEGITIVE
 	}DIRECTION;
-	bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int distance);
+	bool trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,long distance);
 	afx_msg void OnEnUpdateEditDistance();
 
 	
 	afx_msg void OnBnClickedButtonExit();
+	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButtonAddxang();
+	afx_msg void OnBnClickedButtonDecxang();
+	afx_msg void OnBnClickedButtonAddyang();
+	afx_msg void OnBnClickedButtonDecyang();
 };
 typedef struct Button_xyz{
 	CButton* bt1;

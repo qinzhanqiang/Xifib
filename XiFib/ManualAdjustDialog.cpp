@@ -44,6 +44,10 @@ BEGIN_MESSAGE_MAP(ManualAdjustDialog, CDialog)
 	ON_EN_UPDATE(IDC_EDIT_DISTANCE, &ManualAdjustDialog::OnEnUpdateEditDistance)
 	ON_BN_CLICKED(IDC_BUTTON_EXIT, &ManualAdjustDialog::OnBnClickedButtonExit)
 	
+	ON_BN_CLICKED(IDC_BUTTON_ADDXANG, &ManualAdjustDialog::OnBnClickedButtonAddxang)
+	ON_BN_CLICKED(IDC_BUTTON_DECXANG, &ManualAdjustDialog::OnBnClickedButtonDecxang)
+	ON_BN_CLICKED(IDC_BUTTON_ADDYANG, &ManualAdjustDialog::OnBnClickedButtonAddyang)
+	ON_BN_CLICKED(IDC_BUTTON_DECYANG, &ManualAdjustDialog::OnBnClickedButtonDecyang)
 END_MESSAGE_MAP()
 
 
@@ -96,6 +100,39 @@ DWORD WINAPI Threaddecz(LPVOID lpParam)
 	mad.trans(ManualAdjustDialog::AXISz,ManualAdjustDialog::NEGITIVE,(int)lpParam);
 	
 	return 0;
+}
+DWORD WINAPI Threadaddxang(LPVOID lpParam)
+{
+
+	ManualAdjustDialog mad;
+	mad.trans(ManualAdjustDialog::AXISxangle, ManualAdjustDialog::FORWORD, (int)lpParam);
+
+	return 0;
+}
+DWORD WINAPI Threaddecxang(LPVOID lpParam)
+{
+
+	ManualAdjustDialog mad;
+	mad.trans(ManualAdjustDialog::AXISxangle, ManualAdjustDialog::NEGITIVE, (int)lpParam);
+
+	return 0;
+}
+DWORD WINAPI Threadaddyang(LPVOID lpParam)
+{
+
+	ManualAdjustDialog mad;
+	mad.trans(ManualAdjustDialog::AXISyangle, ManualAdjustDialog::FORWORD, (int)lpParam);
+
+	return 0;
+}
+DWORD WINAPI Threaddecyang(LPVOID lpParam)
+{
+
+	ManualAdjustDialog mad;
+	mad.trans(ManualAdjustDialog::AXISyangle, ManualAdjustDialog::NEGITIVE, (int)lpParam);
+
+	return 0;
+
 }
 
 //按键事件处理函数
@@ -167,7 +204,7 @@ void ManualAdjustDialog::OnEnChangeEdit1()
 
 
 //数据发送函数
-bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int distance)
+bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,long distance)
 {
 	//如果上次调节未完成，弹窗提醒并退出发送函数
 	if (buttonFlag == true)
@@ -247,6 +284,11 @@ bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int dist
 		};
 	case AXISxangle:
 		{
+			SData[5] = data_Z % 60;
+			data_Z = data_Z / 60;
+			SData[4] = data_Z % 60;
+			data_Z = data_Z / 60;
+			SData[3] = data_Z % 60;
 			if (up_down_flag==FORWORD)
 			{
 				SData[0] = 01;
@@ -264,6 +306,11 @@ bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int dist
 		};
 	case AXISyangle:
 		{
+			SData[5] = data_Z % 60;
+			data_Z = data_Z / 60;
+			SData[4] = data_Z % 60;
+			data_Z = data_Z / 60;
+			SData[3] = data_Z % 60;
 			if (up_down_flag==FORWORD)
 			{
 				SData[0] = 01;
@@ -279,6 +326,25 @@ bool ManualAdjustDialog::trans(AXISn X_or_Y_or_Z,DIRECTION up_down_flag,int dist
 			goto sendmessage;
 			break;
 		};
+	case AXISlongAngle:
+		SData[0] = 0x03;
+
+		SData[5] = distance % 10;
+		SData[4] = distance / 10 % 10;
+		SData[3] = distance / 100 % 10;
+		SData[2] = distance / 1000 % 10;
+		SData[1] = distance / 10000 % 10;
+		
+		break;
+	case AXISshortAngle:
+		SData[0] = 0x04;
+
+		SData[5] = distance % 10;
+		SData[4] = distance / 10 % 10;
+		SData[3] = distance / 100 % 10;
+		SData[2] = distance / 1000 % 10;
+		SData[1] = distance / 10000 % 10;
+		break;
 	default:
 		{
 			AfxMessageBox(_T("请输入正确的方向"));
@@ -351,3 +417,36 @@ void ManualAdjustDialog::OnBnClickedButtonExit()
 }
 
 
+
+
+
+void ManualAdjustDialog::OnBnClickedButtonAddxang()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	HANDLE Addxangthread = CreateThread(NULL, 0, Threadaddxang, (LPVOID)Set_Distance, 0, NULL);
+	CloseHandle(Addxangthread);
+}
+
+
+void ManualAdjustDialog::OnBnClickedButtonDecxang()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	HANDLE Decxangthread = CreateThread(NULL, 0, Threaddecxang, (LPVOID)Set_Distance, 0, NULL);
+	CloseHandle(Decxangthread);
+}
+
+
+void ManualAdjustDialog::OnBnClickedButtonAddyang()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	HANDLE Addyangthread = CreateThread(NULL, 0, Threadaddyang, (LPVOID)Set_Distance, 0, NULL);
+	CloseHandle(Addyangthread);
+}
+
+
+void ManualAdjustDialog::OnBnClickedButtonDecyang()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	HANDLE Decyangthread = CreateThread(NULL, 0, Threaddecyang, (LPVOID)Set_Distance, 0, NULL);
+	CloseHandle(Decyangthread);
+}

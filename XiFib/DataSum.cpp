@@ -67,9 +67,11 @@ int DataSum::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	dataList.InsertItem(8, "8");
 	dataList.InsertItem(9, "9");
 	dataList.InsertItem(10, "10");
-	dataList.InsertItem(11, "均值");
-	dataList.InsertItem(12, "最大值");
-	dataList.InsertItem(13, "最小值");
+	
+	dataList.InsertItem(11, "最大值");
+	dataList.InsertItem(12, "最小值");
+
+	dataList.InsertItem(13, "均值");
 
 
 	dataList.ShowWindow(SW_RESTORE);

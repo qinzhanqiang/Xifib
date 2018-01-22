@@ -1642,7 +1642,7 @@ void CMainFrame::SaveData()
 
 	//写入数据
 	
-	str = "编号    长轴发散角    	短轴发散角    X0    Y0";
+	str = "编号		长轴发散角		短轴发散角		X0	Y0";
 	saveDataFile.Write(str, str.GetLength());
 	saveDataFile.Write("\r\n\r\n", 5);
 
@@ -1653,10 +1653,10 @@ void CMainFrame::SaveData()
 	for (int i = 0; i < 13; i++)
 	{
 		data = dataSumList.GetItemText(i, 0);
-		data = data + "    " + dataSumList.GetItemText(i, 1);
-		data = data + "    " + dataSumList.GetItemText(i, 2);
-		data = data + "    " + dataSumList.GetItemText(i, 3);
-		data = data + "    " + dataSumList.GetItemText(i, 4);
+		data = data + "		" + dataSumList.GetItemText(i, 1);
+		data = data + "		" + dataSumList.GetItemText(i, 2);
+		data = data + "		" + dataSumList.GetItemText(i, 3);
+		data = data + "	" + dataSumList.GetItemText(i, 4);
 		saveDataFile.Write(data, data.GetLength());
 		saveDataFile.Write("\r\n", 3);
 	}
@@ -1664,7 +1664,7 @@ void CMainFrame::SaveData()
 
 
 	saveDataFile.Close();
-
+	
 	AfxMessageBox(_T("保存数据成功！"));
 }
 void CMainFrame::OnSaveData()
