@@ -40,6 +40,8 @@ public:
 	
 	
 	CString fiberNum;
+	afx_msg void OnEnChangeZ();
+	CString SetZ;
 };
 
 typedef enum AXISn
