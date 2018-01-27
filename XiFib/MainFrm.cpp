@@ -1611,7 +1611,7 @@ extern CString fiberNumber;
 void CMainFrame::SaveData()
 {
 	CString filePath;
-	CString fileName = "测量数据.txt";
+	CString fileName = "测量数据.xls";
 	bool fileFlag = false;
 	//获取当前程序所在的目录,并添加文件名
 	GetModuleFileName(NULL, filePath.GetBufferSetLength(MAX_PATH + 1), MAX_PATH);
@@ -1629,7 +1629,13 @@ void CMainFrame::SaveData()
 	fileFlag = saveDataFile.Open(filePath, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate);
 	if (fileFlag == false)
 	{
-		AfxMessageBox(_T("打开文件失败"));
+		AfxMessageBox(_T("打开文件失败，请关闭文件后点击确认"));
+		fileFlag = saveDataFile.Open(filePath, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate);
+		if (fileFlag == false)
+		{
+			AfxMessageBox(_T("打开文件失败，退出保存程序！"));
+			return;
+		}
 	}
 	saveDataFile.SeekToEnd();
 	//写入当前时间
@@ -1642,7 +1648,7 @@ void CMainFrame::SaveData()
 
 	//写入数据
 	
-	str = "编号		长轴发散角		短轴发散角		X0	Y0";
+	str = "编号	长轴发散角	短轴发散角	X0	Y0";
 	saveDataFile.Write(str, str.GetLength());
 	saveDataFile.Write("\r\n\r\n", 5);
 
@@ -1653,9 +1659,9 @@ void CMainFrame::SaveData()
 	for (int i = 0; i < 13; i++)
 	{
 		data = dataSumList.GetItemText(i, 0);
-		data = data + "		" + dataSumList.GetItemText(i, 1);
-		data = data + "		" + dataSumList.GetItemText(i, 2);
-		data = data + "		" + dataSumList.GetItemText(i, 3);
+		data = data + "	" + dataSumList.GetItemText(i, 1);
+		data = data + "	" + dataSumList.GetItemText(i, 2);
+		data = data + "	" + dataSumList.GetItemText(i, 3);
 		data = data + "	" + dataSumList.GetItemText(i, 4);
 		saveDataFile.Write(data, data.GetLength());
 		saveDataFile.Write("\r\n", 3);
