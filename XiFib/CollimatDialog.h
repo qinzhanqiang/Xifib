@@ -82,3 +82,4 @@ double GetDivAng(vector<double> arr,double Thre);
 double GetDivAngNew1(vector<double> arrX,vector<double> arrY,double ThreX,double ThreY);
 
 double GetDis(vector<double> &arr);
+void SaveTempData(int count, int datax, int datay, cv::Point2d point_last, cv::Point2d point);
