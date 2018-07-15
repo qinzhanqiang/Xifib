@@ -14,6 +14,8 @@ class CCollimatDialog : public CDialogEx
 {
 	DECLARE_DYNAMIC(CCollimatDialog)
 
+
+
 public:
 	CCollimatDialog(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CCollimatDialog();

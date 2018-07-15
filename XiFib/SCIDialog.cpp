@@ -14,7 +14,7 @@ IMPLEMENT_DYNAMIC(CSCIDialog, CDialogEx)
 
 CSCIDialog::CSCIDialog(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSCIDialog::IDD, pParent)
-	, m_Com(1)			//默认设置为串口2
+	, m_Com(3)			//默认设置为串口2
 	, m_BaudRate(1)		//默认设置为波特率9600
 	, m_Parity(0)
 {
@@ -36,6 +36,7 @@ void CSCIDialog::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CSCIDialog, CDialogEx)
 	
+	//ON_CBN_SELCHANGE(IDC_COMBO_COM, &CSCIDialog::OnCbnSelchangeComboCom)
 END_MESSAGE_MAP()
 
 
@@ -138,4 +139,10 @@ END_MESSAGE_MAP()
 //	//}
 //
 //	CDialogEx::OnOK();
+//}
+
+
+//void CSCIDialog::OnCbnSelchangeComboCom()
+//{
+	// TODO: 在此添加控件通知处理程序代码
 //}

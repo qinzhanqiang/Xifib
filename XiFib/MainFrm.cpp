@@ -992,7 +992,7 @@ void CMainFrame::OnCollimat()
 		ColDlg = new CCollimatDialog(ColDlg);
 		ColDlg->Create(IDD_COLLIMAT,this); 
 	}
-	
+
 	if (!flag_start)
 	{
 		CString str("系统未启动，请先启动");

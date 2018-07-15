@@ -343,7 +343,7 @@ DWORD WINAPI AcquisitionProc( LPVOID lpv )
 
 				//进入临界区
 				EnterCriticalSection(&C_lock);
-				mvret = xiGetImage( hMVlocal, image_timeout_ms, &lps->img );
+				mvret = xiGetImage( hMVlocal, image_timeout_ms, &lps->img );	//使用相机读取图像
 				LeaveCriticalSection(&C_lock);
 				//离开临界区
 
